@@ -1,0 +1,18 @@
+sudo: false
+addons:
+  apt:
+    packages:
+      - autoconf2.64
+      - automake1.11
+      - gcc-4.6-multilib
+      - libtool
+      - texinfo
+      - gperf
+      - bison
+      - flex
+os:
+  - linux
+script:
+  - ./libc.sh
+notifications:
+  email: false
