@@ -39,10 +39,10 @@ static SDLKey keymap[128];
 #define EVENT_QUIT 3
 
 struct Event {
-    int code;
-    int a;
-    int b;
-    int c;
+    int64_t code;
+    int64_t a;
+    int64_t b;
+    int64_t c;
 } __attribute__((packed));
 
 void ORBITAL_PumpEvents(_THIS)

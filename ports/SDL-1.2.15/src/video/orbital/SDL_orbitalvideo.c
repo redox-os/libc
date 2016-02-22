@@ -160,7 +160,7 @@ SDL_Surface *ORBITAL_SetVideoMode(_THIS, SDL_Surface *current,
 	}
 
 	char path[4096];
-	snprintf(path, 4096, "orbital:///0/0/%d/%d/SDL", width, height);
+	snprintf(path, 4096, "orbital:/-1/-1/%d/%d/SDL", width, height);
 	this->hidden->fd = open(path, O_RDONLY);
 	printf("%s at %d\n", path, this->hidden->fd);
 
@@ -216,9 +216,7 @@ static void ORBITAL_UnlockHWSurface(_THIS, SDL_Surface *surface)
 
 static void ORBITAL_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 {
-	lseek(this->hidden->fd, 0, 0);
 	write(this->hidden->fd, this->hidden->buffer, this->hidden->w * this->hidden->h * 4);
-	fsync(this->hidden->fd);
 }
 
 int ORBITAL_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)

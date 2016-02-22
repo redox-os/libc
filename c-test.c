@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
 
 int main(int argc, char ** argv){
     printf("Test %d\n", argc);
@@ -11,14 +13,14 @@ int main(int argc, char ** argv){
     }
     struct timespec tp;
     if(clock_gettime(CLOCK_REALTIME, &tp) == 0){
-        printf("clock_gettime %d %d\n", tp.tv_sec, tp.tv_nsec);
+        printf("clock_gettime %d %d\n", (int)tp.tv_sec, (int)tp.tv_nsec);
         void* test = malloc(1024*1024);
         if(test > 0){
             printf("Malloc %x\n", test);
             free(test);
             printf("Free\n");
 
-            DIR * dir = opendir("file:///");
+            DIR * dir = opendir("/home/");
             if (dir != NULL) {
                 struct dirent * ent;
                 while ((ent = readdir(dir)) != NULL) {
