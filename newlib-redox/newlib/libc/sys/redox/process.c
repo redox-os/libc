@@ -1,23 +1,19 @@
 #include "common.h"
 
-int chdir(const char *path){
-    return (int)syscall(SYS_CHDIR, (uint)path, 0, 0);
-}
-
 int clone() {
-    return (int)syscall(SYS_CLONE, CLONE_VM | CLONE_FS | CLONE_FILES, 0, 0);
+    return syscall1(SYS_CLONE, CLONE_VM | CLONE_FS | CLONE_FILES);
 }
 
 void _exit(int code){
-    syscall(SYS_EXIT, (uint)code, 0, 0);
+    syscall1(SYS_EXIT, (uint)code);
 }
 
 int _execve(const char *name, const char **argv, const char **env) {
-    return (int)syscall(SYS_EXECVE, (uint)name, (uint)argv, (uint)env);
+    return syscall3(SYS_EXECVE, (uint)name, (uint)argv, (uint)env);
 }
 
 int fork() {
-    return (int)syscall(SYS_CLONE, 0, 0, 0);
+    return syscall1(SYS_CLONE, 0);
 }
 
 char * getcwd(char * buf, size_t size) {
@@ -50,12 +46,12 @@ char * getcwd(char * buf, size_t size) {
 
 
 pid_t getpid() {
-    return (int)syscall(SYS_GETPID, 0, 0, 0);
+    return syscall0(SYS_GETPID);
 }
 
 void * sbrk(ptrdiff_t increment){
-    char * curr_brk = (char *)syscall(SYS_BRK, 0, 0, 0);
-    char * new_brk = (char *)syscall(SYS_BRK, (uint)(curr_brk + increment), 0, 0);
+    char * curr_brk = (char *)syscall1(SYS_BRK, 0);
+    char * new_brk = (char *)syscall1(SYS_BRK, (uint)(curr_brk + increment));
     if (new_brk != curr_brk + increment){
         return (void *) -1;
     }
@@ -63,7 +59,11 @@ void * sbrk(ptrdiff_t increment){
 }
 
 int sched_yield() {
-    return (int)syscall(SYS_YIELD, 0, 0, 0);
+    return syscall0(SYS_YIELD);
+}
+
+pid_t vfork() {
+    return syscall1(SYS_CLONE, CLONE_VM | CLONE_VFORK);
 }
 
 pid_t wait(int * status) {
@@ -71,5 +71,5 @@ pid_t wait(int * status) {
 }
 
 pid_t waitpid(pid_t pid, int * status, int options) {
-    return (pid_t)syscall(SYS_WAITPID, (uint)pid, (uint)status, (uint)options);
+    return syscall3(SYS_WAITPID, (uint)pid, (uint)status, (uint)options);
 }

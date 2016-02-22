@@ -77,18 +77,6 @@ int kill(int pid, int sig) {
     UNIMPL(EINVAL);
 }
 
-int mkdir(const char * path, mode_t mode) {
-    UNIMPL(EACCES);
-}
-
-int pipe(int pipefd[2]) {
-    UNIMPL(EINVAL);
-}
-
-int rmdir(const char * path){
-    UNIMPL(EACCES);
-}
-
 int setgid(gid_t gid) {
     UNIMPL(EINVAL);
 }
