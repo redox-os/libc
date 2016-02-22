@@ -13,6 +13,6 @@ addons:
 os:
   - linux
 script:
-  - ./libc.sh
+  - ./libc.sh >/dev/null
 notifications:
   email: false
