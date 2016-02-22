@@ -40,6 +40,19 @@ function DEPENDS {
 function fetch_template {
     case $1 in
         add)
+            fetch_template fetch
+            if [ -d "${DIR}" ]
+            then
+                cp -rv "${DIR}"/* "${BUILD}/${DIR}"
+            fi
+            ;;
+        remove)
+            if [ -d "${BUILD}/${DIR}" ]
+            then
+                rm -rfv "${BUILD}/${DIR}"
+            fi
+            ;;
+        fetch)
             if [ -n "${SRC}" ]
             then
                 if [ ! -f "${BUILD}/$(basename "${SRC}")" ]
@@ -60,16 +73,6 @@ function fetch_template {
                     git clone "${GIT}"
                     popd
                 fi
-            fi
-            if [ -d "${DIR}" ]
-            then
-                cp -rv "${DIR}"/* "${BUILD}/${DIR}"
-            fi
-            ;;
-        remove)
-            if [ -d "${BUILD}/${DIR}" ]
-            then
-                rm -rfv "${BUILD}/${DIR}"
             fi
             ;;
         unfetch)
