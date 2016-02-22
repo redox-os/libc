@@ -62,7 +62,7 @@ function fetch_template {
                 if [ ! -d "${BUILD}/${DIR}" ]
                 then
                     pushd "${BUILD}"
-                    tar xvf "$(basename "${SRC}")"
+                    tar xf "$(basename "${SRC}")"
                     popd
                 fi
             elif [ -n "${GIT}" ]

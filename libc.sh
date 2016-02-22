@@ -24,7 +24,7 @@ function binutils {
 
     if [ ! -d "${BINUTILS}" ]
     then
-        tar xvf "${BINUTILS}.tar.bz2"
+        tar xf "${BINUTILS}.tar.bz2"
     fi
 
     cp -r ../binutils-redox/* "${BINUTILS}"
@@ -49,7 +49,7 @@ function gcc_freestanding {
 
     if [ ! -d "${GCC}" ]
     then
-        tar xvf "${GCC}.tar.bz2"
+        tar xf "${GCC}.tar.bz2"
         pushd "${GCC}"
             ./contrib/download_prerequisites
         popd
@@ -83,7 +83,7 @@ function newlib {
 
     if [ ! -d "${NEWLIB}" ]
     then
-        tar xvf "${NEWLIB}.tar.gz"
+        tar xf "${NEWLIB}.tar.gz"
     fi
 
     cp -r ../newlib-redox/* "${NEWLIB}"
