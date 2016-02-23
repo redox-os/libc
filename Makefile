@@ -1,8 +1,11 @@
 export PATH := build/prefix/bin:$(PATH)
 
-all: bin/c-test bin/dosbox bin/lua bin/sdl-test bin/sdl-ttf-test bin/tar
+all: bin/c-test bin/ed bin/dosbox bin/lua bin/sdl-test bin/sdl-ttf-test bin/tar
 
 bin/c-test: c-test.c
+	i386-elf-redox-gcc -Os -static -o $@ $<
+
+bin/ed: ed.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
 
 bin/sdl-test: sdl-test.c
