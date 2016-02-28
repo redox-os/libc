@@ -62,6 +62,23 @@ int sched_yield() {
     return syscall0(SYS_YIELD);
 }
 
+int _system(char * s){
+    int pid = vfork();
+    if(pid == 0) {
+        execl("/bin/sh", "-c", s, (char *)0);
+        exit(100);
+    } else if (pid < 0) {
+        return -1;
+    } else {
+        int status = 0;
+        int rc = waitpid(pid, &status, 0);
+        if (rc < 0) {
+            return -1;
+        }
+        return status;
+    }
+}
+
 pid_t vfork() {
     return syscall1(SYS_CLONE, CLONE_VM | CLONE_VFORK);
 }
