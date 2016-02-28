@@ -39,6 +39,12 @@ int main(int argc, char ** argv){
                     }
                 }else if(pid == 0){
                     printf("Fork Child %d = %d\n", getpid(), pid);
+                    int result = system("echo test");
+                    if(result == 0){
+                        printf("System Success");
+                    } else {
+                        printf("System Failed %d\n", result);
+                    }
                     _exit(123);
                 } else {
                     printf("Fork Failed %d = %d\n", getpid(), pid);
