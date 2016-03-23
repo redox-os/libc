@@ -1,6 +1,6 @@
 export PATH := build/prefix/bin:$(PATH)
 
-all: bin/c-test bin/ed bin/dosbox bin/lua bin/luac bin/sdl-test bin/sdl-ttf-test bin/tar
+all: bin/c-test bin/ed bin/dosbox bin/lua bin/luac bin/sdl-test bin/sdl-ttf-test bin/tar lib/libc.a lib/libm.a
 
 bin/c-test: c-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
@@ -15,6 +15,9 @@ bin/sdl-ttf-test: sdl-ttf-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $< -lSDL_ttf -lSDL_image -lSDL -lfreetype -lpng -lz -lm
 
 bin/%: build/sysroot/usr/bin/%
+	cp $< $@
+
+lib/%: build/prefix/i386-elf-redox/lib/%
 	cp $< $@
 
 install: all
