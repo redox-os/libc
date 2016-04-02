@@ -230,6 +230,11 @@ int ORBITAL_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 */
 void ORBITAL_VideoQuit(_THIS)
 {
+	if ( this->hidden->fd ) {
+		close( this->hidden->fd );
+                this->hidden->fd = 0;
+	}
+
 	if (this->screen->pixels != NULL)
 	{
 		SDL_free(this->screen->pixels);
