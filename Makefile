@@ -1,6 +1,6 @@
 export PATH := build/prefix/bin:$(PATH)
 
-all: bin/c-test bin/ed bin/dosbox bin/lua bin/luac bin/sdl-test bin/sdl-ttf-test bin/tar lib/libc.a lib/libm.a
+all: bin/c-test bin/ed bin/dosbox bin/lua bin/luac bin/sdl-test bin/tar lib/libc.a lib/libm.a
 
 bin/c-test: c-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
@@ -10,9 +10,6 @@ bin/ed: ed.c
 
 bin/sdl-test: sdl-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $< -lSDL
-
-bin/sdl-ttf-test: sdl-ttf-test.c
-	i386-elf-redox-gcc -Os -static -o $@ $< -lSDL_ttf -lSDL_image -lSDL -lfreetype -lpng -lz -lm
 
 bin/%: build/sysroot/usr/bin/%
 	cp $< $@
