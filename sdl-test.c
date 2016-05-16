@@ -18,6 +18,9 @@ int log_events(){
             case SDL_MOUSEMOTION:
                 printf("Mouse motion\n");
                 break;
+            case SDL_QUIT:
+                printf("Quit\n");
+                return 0;
             default: /* Report an unhandled event */
                 printf("Unknown Event: %d\n", event.type);
                 break;
