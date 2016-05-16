@@ -49,7 +49,7 @@ void ORBITAL_PumpEvents(_THIS)
 {
     struct Event event;
     while(read(this->hidden->fd, &event, sizeof(event)) > 0){
-        if ( event.code == EVENT_KEY ){
+        if ( event.code == EVENT_KEY ) {
             SDL_keysym keysym;
         	keysym.unicode = event.a;
         	keysym.scancode = event.b;
@@ -60,9 +60,11 @@ void ORBITAL_PumpEvents(_THIS)
             } else {
                 SDL_PrivateKeyboard(SDL_RELEASED, &keysym);
             }
-        }else if( event.code == EVENT_MOUSE ){
+        } else if( event.code == EVENT_MOUSE ) {
             SDL_PrivateMouseMotion(event.c, 0, event.a, event.b);
             //SDL_PrivateMouseButton(Uint8 state, Uint8 button, Sint16 x, Sint16 y);
+        } else if ( event.code == EVENT_QUIT ) {
+            SDL_PrivateQuit();
         }
     }
 }
