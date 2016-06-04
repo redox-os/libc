@@ -36,6 +36,7 @@ extern int errno;
 #define SYS_PIPE2 331
 #define SYS_READ 3
 #define SYS_RMDIR 84
+#define SYS_STAT 18
 #define SYS_UNLINK 10
 #define SYS_WAITPID 7
 #define SYS_WRITE 4

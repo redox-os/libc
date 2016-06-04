@@ -16,6 +16,10 @@ int fpath(int file, char * buf, int len) {
     return syscall2(SYS_FPATH, (uint)buf, (uint)len);
 }
 
+int fstat(int file, struct stat *st) {
+    return syscall2(SYS_FSTAT, (uint)file, (uint)st);
+}
+
 int fsync(int file) {
     return syscall1(SYS_FSYNC, (uint)file);
 }
@@ -54,6 +58,10 @@ int read(int file, char *ptr, int len) {
 
 int rmdir(const char * path){
     return syscall1(SYS_RMDIR, (uint)path);
+}
+
+int stat(const char *__restrict path, struct stat *__restrict sbuf) {
+    return syscall2(SYS_STAT, (uint)path, (uint)sbuf);
 }
 
 int unlink(const char *name) {

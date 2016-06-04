@@ -9,7 +9,9 @@
 }
 
 int access(const char * path, int amode){
-    UNIMPL(EACCES);
+    //All permissions granted, if file exists
+    struct stat sbuf;
+    return stat(path, &sbuf);
 }
 
 int chmod(const char * path, mode_t mode) {
@@ -22,11 +24,6 @@ int dup2(int oldfd, int newfd) {
 
 int fcntl(int file, int cmd, ...){
     UNIMPL(EACCES);
-}
-
-int fstat(int file, struct stat *st) {
-    st->st_mode = S_IFREG;
-    return 0;
 }
 
 struct hostent * gethostbyname(const char * name) {
@@ -85,11 +82,6 @@ int setuid(uid_t uid) {
     UNIMPL(EINVAL);
 }
 
-int stat(const char *__restrict path, struct stat *__restrict sbuf) {
-    sbuf->st_mode = S_IFREG;
-    return 0;
-}
-
 long sysconf(int name) {
     UNIMPL(EINVAL);
 }
@@ -99,6 +91,7 @@ clock_t times(struct tms * buf) {
 }
 
 mode_t umask(mode_t mask) {
+    //All permissions granted
     return 0777;
 }
 
