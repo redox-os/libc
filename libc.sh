@@ -3,15 +3,19 @@ set -e
 
 mkdir -p build
 
-PREFIX="${PWD}/build/prefix"
+cd build
+
+PREFIX="${PWD}/prefix"
 mkdir -p "${PREFIX}"
 mkdir -p "${PREFIX}/bin"
 export PATH="${PREFIX}/bin:$PATH"
 
-SYSROOT="${PWD}/build/sysroot"
+SYSROOT="${PWD}/sysroot"
 mkdir -p "${SYSROOT}"
 
-cd build
+mkdir -p cross
+
+cd cross
 
 ###################BINUTILS#########################
 function binutils {
@@ -27,7 +31,7 @@ function binutils {
         tar xf "${BINUTILS}.tar.bz2"
     fi
 
-    cp -r ../binutils-redox/* "${BINUTILS}"
+    cp -r ../../binutils-redox/* "${BINUTILS}"
 
     rm -rf "build-${BINUTILS}"
     mkdir "build-${BINUTILS}"
@@ -55,7 +59,7 @@ function gcc_freestanding {
         popd
     fi
 
-    cp -r ../gcc-redox/* "${GCC}"
+    cp -r ../../gcc-redox/* "${GCC}"
 
     pushd "${GCC}/libstdc++-v3"
         autoconf2.64
@@ -86,7 +90,7 @@ function newlib {
         tar xf "${NEWLIB}.tar.gz"
     fi
 
-    cp -r ../newlib-redox/* "${NEWLIB}"
+    cp -r ../../newlib-redox/* "${NEWLIB}"
 
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..
