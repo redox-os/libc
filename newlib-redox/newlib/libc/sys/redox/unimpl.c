@@ -18,6 +18,10 @@ int chmod(const char * path, mode_t mode) {
     UNIMPL(EACCES);
 }
 
+int chown(const char *path, uid_t owner, gid_t group) {
+    UNIMPL(EACCES);
+}
+
 int dup2(int oldfd, int newfd) {
     UNIMPL(EBADF);
 }

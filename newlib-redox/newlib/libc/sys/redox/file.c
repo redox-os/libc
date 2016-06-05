@@ -32,6 +32,11 @@ int lseek(int file, int ptr, int dir) {
     return syscall3(SYS_LSEEK, (uint)file, (uint)ptr, (uint)dir);
 }
 
+//TODO: Actually implement lstat, it currently just calls stat
+int lstat(const char *__restrict path, struct stat *__restrict sbuf) {
+    return syscall2(SYS_STAT, (uint)path, (uint)sbuf);
+}
+
 int link(const char *old, const char *new) {
     return syscall2(SYS_LINK, (uint)old, (uint)new);
 }
