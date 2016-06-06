@@ -1,6 +1,6 @@
 export PATH := build/prefix/bin:$(PATH)
 
-all: bin/c-test bin/ed bin/lua bin/luac bin/nasm bin/ndisasm bin/pcc bin/sdl-test bin/thread-test lib/libc.a lib/libm.a lib/libpng.a lib/libz.a
+all: binutils bin/c-test bin/ed bin/lua bin/luac bin/nasm bin/ndisasm bin/pcc bin/sdl-test bin/thread-test lib/libc.a lib/libm.a lib/libpng.a lib/libz.a
 
 binutils: bin/addr2line bin/ar bin/as bin/c++filt bin/elfedit bin/gprof bin/ld bin/ld.bfd bin/nm bin/objcopy bin/objdump bin/ranlib bin/readelf bin/size bin/strings bin/strip
 
