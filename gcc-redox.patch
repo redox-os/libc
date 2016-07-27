@@ -1,0 +1,129 @@
+diff -rupN gcc/config.sub gcc-redox/config.sub
+--- gcc/config.sub	2010-05-25 06:22:07.000000000 -0700
++++ gcc-redox/config.sub	2016-07-27 10:20:38.442230579 -0700
+@@ -1309,7 +1309,7 @@ case $os in
+ 	      | -chorusos* | -chorusrdb* | -cegcc* \
+ 	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
+ 	      | -mingw32* | -linux-gnu* | -linux-android* \
+-	      | -linux-newlib* | -linux-uclibc* \
++	      | -linux-newlib* | -linux-uclibc* | -redox* \
+ 	      | -uxpv* | -beos* | -mpeix* | -udk* \
+ 	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
+ 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
+diff -rupN gcc/fixincludes/mkfixinc.sh gcc-redox/fixincludes/mkfixinc.sh
+--- gcc/fixincludes/mkfixinc.sh	2010-03-28 09:40:50.000000000 -0700
++++ gcc-redox/fixincludes/mkfixinc.sh	2016-07-27 10:20:38.445563930 -0700
+@@ -15,6 +15,8 @@ case $machine in
+     i?86-moss-msdos* | \
+     i?86-*-pe | \
+     i?86-*-cygwin* | \
++    i?86-*-redox* | \
++    x86_64-*-redox* | \
+     i?86-*-mingw32* | \
+     x86_64-*-mingw32* | \
+     i?86-*-interix* | \
+diff -rupN gcc/gcc/config/redox.h gcc-redox/gcc/config/redox.h
+--- gcc/gcc/config/redox.h	1969-12-31 16:00:00.000000000 -0800
++++ gcc-redox/gcc/config/redox.h	2016-07-27 10:20:38.445563930 -0700
+@@ -0,0 +1,17 @@
++#undef TARGET_REDOX
++#define TARGET_REDOX 1
++
++#define LIB_SPEC "-lc -lg -lm"
++
++#undef  NO_IMPLICIT_EXTERN_C
++#define NO_IMPLICIT_EXTERN_C 1
++
++#undef TARGET_OS_CPP_BUILTINS
++#define TARGET_OS_CPP_BUILTINS()      \
++  do {                                \
++    builtin_define ("__redox__");      \
++    builtin_define ("__unix__");      \
++    builtin_assert ("system=redox");   \
++    builtin_assert ("system=unix");   \
++    builtin_assert ("system=posix");   \
++  } while(0);
+diff -rupN gcc/gcc/config.gcc gcc-redox/gcc/config.gcc
+--- gcc/gcc/config.gcc	2013-03-06 09:40:07.000000000 -0800
++++ gcc-redox/gcc/config.gcc	2016-07-27 10:20:38.445563930 -0700
+@@ -617,6 +617,11 @@ case ${target} in
+       ;;
+   esac
+   ;;
++*-*-redox*)
++  gas=yes
++  gnu_ld=yes
++  default_use_cxa_atexit=yes
++  ;;
+ *-*-netbsd*)
+   tmake_file="t-slibgcc-elf-ver t-libc-ok t-netbsd t-libgcc-pic"
+   gas=yes
+@@ -1316,6 +1321,12 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu
+ 	esac
+ 	tmake_file="${tmake_file} i386/t-linux64 i386/t-crtstuff i386/t-crtpc i386/t-crtfm t-dfprules"
+ 	;;
++i[34567]86-*-redox*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h redox.h"
++	;;
++x86_64-*-redox*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h redox.h"
++	;;
+ i[34567]86-pc-msdosdjgpp*)
+ 	xm_file=i386/xm-djgpp.h
+ 	tm_file="dbxcoff.h ${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h i386/djgpp-stdint.h"
+diff -rupN gcc/gcc/cp/cfns.h gcc-redox/gcc/cp/cfns.h
+--- gcc/gcc/cp/cfns.h	2009-04-21 12:03:23.000000000 -0700
++++ gcc-redox/gcc/cp/cfns.h	2016-07-27 10:20:38.445563930 -0700
+@@ -53,6 +53,9 @@ __inline
+ static unsigned int hash (const char *, unsigned int);
+ #ifdef __GNUC__
+ __inline
++#ifdef __GNUC_STDC_INLINE__
++__attribute__ ((__gnu_inline__))
++#endif
+ #endif
+ const char * libc_name_p (const char *, unsigned int);
+ /* maximum key range = 391, duplicates = 0 */
+@@ -96,7 +99,7 @@ hash (register const char *str, register
+       400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
+       400, 400, 400, 400, 400, 400, 400
+     };
+-  register int hval = len;
++  register int hval = (int)len;
+ 
+   switch (hval)
+     {
+diff -rupN gcc/libgcc/config.host gcc-redox/libgcc/config.host
+--- gcc/libgcc/config.host	2011-11-23 14:15:54.000000000 -0800
++++ gcc-redox/libgcc/config.host	2016-07-27 10:20:38.445563930 -0700
+@@ -296,6 +296,14 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu
+ 	extra_parts="$extra_parts crtprec32.o crtprec64.o crtprec80.o crtfastmath.o"
+ 	tmake_file="${tmake_file} i386/t-crtpc i386/t-crtfm"
+ 	;;
++i[34567]86-*-redox*)
++	extra_parts="$extra_parts crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
++x86_64-*-redox*)
++	extra_parts="$extra_parts crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
+ i[34567]86-pc-msdosdjgpp*)
+ 	;;
+ i[34567]86-*-lynxos*)
+diff -rupN gcc/libstdc++-v3/crossconfig.m4 gcc-redox/libstdc++-v3/crossconfig.m4
+--- gcc/libstdc++-v3/crossconfig.m4	2011-02-03 23:26:57.000000000 -0800
++++ gcc-redox/libstdc++-v3/crossconfig.m4	2016-07-27 10:20:38.445563930 -0700
+@@ -150,6 +150,12 @@ case "${host}" in
+     GCC_CHECK_TLS
+     AM_ICONV
+     ;;
++  *-redox*)
++    GLIBCXX_CHECK_COMPILER_FEATURES
++    GLIBCXX_CHECK_LINKER_FEATURES
++    GLIBCXX_CHECK_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
+   *-mingw32*)
+     GLIBCXX_CHECK_LINKER_FEATURES
+     GLIBCXX_CHECK_MATH_SUPPORT
