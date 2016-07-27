@@ -26,12 +26,10 @@ function binutils {
         curl "ftp://sourceware.org/pub/binutils/snapshots/${BINUTILS}.tar.bz2" -o "${BINUTILS}.tar.bz2"
     fi
 
-    if [ ! -d "${BINUTILS}" ]
-    then
-        tar xf "${BINUTILS}.tar.bz2"
-    fi
+    rm -rf "${BINUTILS}"
+    tar xf "${BINUTILS}.tar.bz2"
 
-    cp -r ../../binutils-redox/* "${BINUTILS}"
+    patch -p1 -d "${BINUTILS}" < ../../binutils-redox.patch
 
     rm -rf "build-${BINUTILS}"
     mkdir "build-${BINUTILS}"
@@ -51,15 +49,13 @@ function gcc_freestanding {
         curl "http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.bz2" -o "${GCC}.tar.bz2"
     fi
 
-    if [ ! -d "${GCC}" ]
-    then
-        tar xf "${GCC}.tar.bz2"
-        pushd "${GCC}"
-            ./contrib/download_prerequisites
-        popd
-    fi
+    rm -rf "${GCC}"
+    tar xf "${GCC}.tar.bz2"
+    pushd "${GCC}"
+        ./contrib/download_prerequisites
+    popd
 
-    cp -r ../../gcc-redox/* "${GCC}"
+    patch -p1 -d "${GCC}" < ../../gcc-redox.patch
 
     pushd "${GCC}/libstdc++-v3"
         autoconf2.64
@@ -85,12 +81,11 @@ function newlib {
         curl "ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz" -o "${NEWLIB}.tar.gz"
     fi
 
-    if [ ! -d "${NEWLIB}" ]
-    then
-        tar xf "${NEWLIB}.tar.gz"
-    fi
+    rm -rf ${NEWLIB}
+    tar xf "${NEWLIB}.tar.gz"
 
-    cp -r ../../newlib-redox/* "${NEWLIB}"
+    patch -p1 -d "${NEWLIB}" < ../../newlib-redox.patch
+    cp -r ../../newlib-redox-backend "${NEWLIB}/newlib/libc/sys/redox"
 
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..

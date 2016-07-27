@@ -1,0 +1,56 @@
+diff -rupNZ newlib/config.sub newlib-redox/config.sub
+--- newlib/config.sub	2015-08-24 10:09:16.000000000 -0700
++++ newlib-redox/config.sub	2016-07-27 10:24:29.683667766 -0700
+@@ -1385,7 +1385,7 @@ case $os in
+ 	      | -chorusos* | -chorusrdb* | -cegcc* \
+ 	      | -cygwin* | -msys* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
+ 	      | -mingw32* | -mingw64* | -linux-gnu* | -linux-android* \
+-	      | -linux-newlib* | -linux-musl* | -linux-uclibc* \
++	      | -linux-newlib* | -linux-musl* | -linux-uclibc* | -redox* \
+ 	      | -uxpv* | -beos* | -mpeix* | -udk* | -moxiebox* \
+ 	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
+ 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
+diff -rupNZ newlib/newlib/configure.host newlib-redox/newlib/configure.host
+--- newlib/newlib/configure.host	2015-08-24 10:09:16.000000000 -0700
++++ newlib-redox/newlib/configure.host	2016-07-27 10:24:29.683667766 -0700
+@@ -448,6 +448,14 @@ case "${host}" in
+ 	sys_dir=rdos
+ 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+ 	;;
++  i[3-7]86-*-redox*)
++	sys_dir=redox
++	posix_dir=posix
++	unix_dir=unix
++	newlib_cflags="${newlib_cflags} -D_I386MACH_ALLOW_HW_INTERRUPTS"
++	newlib_cflags="${newlib_cflags} -DHAVE_NANOSLEEP -DHAVE_OPENDIR -DHAVE_SYSTEM"
++	newlib_cflags="${newlib_cflags} -D_NO_GETCWD -D_NO_GETLOGIN -D_NO_GETPWENT -D_NO_GETUT -D_NO_GETPASS -D_NO_POPEN -D_NO_SIGSET -D_NO_TTYNAME -D_NO_WORDEXP"
++	;;
+   i[34567]86-*-sco*)
+ 	sys_dir=sysvi386
+ 	unix_dir=unix
+diff -rupNZ newlib/newlib/libc/include/sys/config.h newlib-redox/newlib/libc/include/sys/config.h
+--- newlib/newlib/libc/include/sys/config.h	2015-08-24 10:09:16.000000000 -0700
++++ newlib-redox/newlib/libc/include/sys/config.h	2016-07-27 10:24:29.687001123 -0700
+@@ -94,9 +94,9 @@
+ #define HAVE_GETDATE
+ #define _HAVE_SYSTYPES
+ #define _READ_WRITE_RETURN_TYPE _ssize_t
+-#define __LARGE64_FILES 1
++//#define __LARGE64_FILES 1
+ /* we use some glibc header files so turn on glibc large file feature */
+-#define _LARGEFILE64_SOURCE 1
++//#define _LARGEFILE64_SOURCE 1
+ #endif
+ #endif
+ 
+diff -rupNZ newlib/newlib/libc/sys/configure.in newlib-redox/newlib/libc/sys/configure.in
+--- newlib/newlib/libc/sys/configure.in	2015-08-24 10:09:16.000000000 -0700
++++ newlib-redox/newlib/libc/sys/configure.in	2016-07-27 10:24:29.687001123 -0700
+@@ -36,6 +36,7 @@ if test -n "${sys_dir}"; then
+ 	netware) AC_CONFIG_SUBDIRS(netware) ;;
+ 	or1k) AC_CONFIG_SUBDIRS(or1k) ;;
+ 	rdos) AC_CONFIG_SUBDIRS(rdos) ;;
++	redox) AC_CONFIG_SUBDIRS(redox) ;;
+ 	rtems) AC_CONFIG_SUBDIRS(rtems) ;;
+ 	sh) AC_CONFIG_SUBDIRS(sh) ;;
+ 	sparc64) AC_CONFIG_SUBDIRS(sparc64) ;;
