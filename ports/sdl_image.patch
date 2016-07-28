@@ -1,0 +1,12 @@
+diff -rupN sdl_image/config.sub sdl_image-redox/config.sub
+--- sdl_image/config.sub	2012-01-20 17:51:33.000000000 -0800
++++ sdl_image-redox/config.sub	2016-07-27 18:17:22.457216428 -0700
+@@ -1276,7 +1276,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+-	      | -kopensolaris* \
++	      | -kopensolaris* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \

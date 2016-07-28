@@ -1,0 +1,12 @@
+diff -rupN mesa/bin/config.sub mesa-redox/bin/config.sub
+--- mesa/bin/config.sub	2015-10-24 11:46:48.000000000 -0700
++++ mesa-redox/bin/config.sub	2016-07-27 18:08:59.800608238 -0700
+@@ -1371,7 +1371,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \

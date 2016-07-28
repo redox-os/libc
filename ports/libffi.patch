@@ -1,0 +1,12 @@
+diff -rupN libffi/config.sub libffi-redox/config.sub
+--- libffi/config.sub	2014-11-12 03:59:58.000000000 -0800
++++ libffi-redox/config.sub	2016-07-27 18:08:34.673750173 -0700
+@@ -1352,7 +1352,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \

@@ -1,0 +1,30 @@
+diff -rupN tcc/configure tcc-redox/configure
+--- tcc/configure	2013-02-15 06:24:00.000000000 -0800
++++ tcc-redox/configure	2016-07-27 18:17:34.693953550 -0700
+@@ -17,7 +17,7 @@ TMPN="./conftest-$$"
+ TMPH=$TMPN.h
+ 
+ # default parameters
+-build_cross="no"
++build_cross="yes"
+ use_libgcc="no"
+ prefix=""
+ execprefix=""
+@@ -29,7 +29,7 @@ mandir=""
+ infodir=""
+ sysroot=""
+ cross_prefix=""
+-cc="gcc"
++cc="i386-elf-redox-gcc"
+ host_cc="gcc"
+ ar="ar"
+ strip="strip"
+@@ -46,7 +46,7 @@ tcc_elfinterp=""
+ tcc_lddir=
+ confvars=
+ 
+-cpu=`uname -m`
++cpu="i686"
+ 
+ # OS specific
+ targetos=`uname -s`

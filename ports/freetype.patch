@@ -1,0 +1,12 @@
+diff -rupN freetype/builds/unix/config.sub freetype-redox/builds/unix/config.sub
+--- freetype/builds/unix/config.sub	2015-10-03 23:21:09.000000000 -0700
++++ freetype-redox/builds/unix/config.sub	2016-07-27 18:06:47.346222182 -0700
+@@ -1377,7 +1377,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* | -cloudabi* | -sortix* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
