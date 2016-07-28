@@ -1,0 +1,12 @@
+diff -rupN jemalloc/build-aux/config.sub jemalloc-redox/build-aux/config.sub
+--- jemalloc/build-aux/config.sub	2015-10-21 12:35:42.000000000 -0700
++++ jemalloc-redox/build-aux/config.sub	2016-07-27 17:52:05.564777775 -0700
+@@ -1371,7 +1371,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \

@@ -1,0 +1,23 @@
+diff -rupN airstrike/src/Makefile airstrike-redox/src/Makefile
+--- airstrike/src/Makefile	2003-01-18 12:02:32.000000000 -0800
++++ airstrike-redox/src/Makefile	2016-07-27 18:03:53.961313537 -0700
+@@ -5,7 +5,7 @@ CFILES:= $(shell find . -name '*.c')
+ OBJECTS:= $(CFILES:.c=.o)
+ 
+ airstrike: $(OBJECTS)
+-	$(CC) -o $@ $(CFLAGS) $(OBJECTS) `sdl-config --libs` -lSDL_image
++	$(CC) -o $@ $(CFLAGS) $(OBJECTS) `sdl-config --libs` -lSDL_image -lpng -lz
+ 
+ airstrike-sound: $(OBJECTS)
+ 	$(CC) -o $@ $(CFLAGS) $(OBJECTS) `sdl-config --libs` -lSDL_image -lSDL_mixer
+@@ -17,8 +17,8 @@ airstrike-sound: $(OBJECTS)
+ clean:
+ 	rm -f `find . -name '*.[od]' -or -name '*~' -or -name '*.bb' -or -name '*.bbg'`
+ 
+-dryclean: 
+-	rm -f `find . -name '*.[^ch]' -type f` 
++dryclean:
++	rm -f `find . -name '*.[^ch]' -type f`
+ 
+ #Automatic dependency handling. This is not needed for a simple compile.
+ 

@@ -1,0 +1,16 @@
+diff -rupN netsurf/libparserutils/Makefile netsurf-redox/libparserutils/Makefile
+--- netsurf/libparserutils/Makefile	2015-03-11 00:34:44.000000000 -0700
++++ netsurf-redox/libparserutils/Makefile	2016-07-27 18:09:05.727319532 -0700
+@@ -16,9 +16,9 @@ WARNFLAGS := -Wall -W -Wundef -Wpointer-
+ 	-Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes \
+ 	-Wmissing-declarations -Wnested-externs -pedantic
+ # BeOS/Haiku standard library headers create warnings.
+-ifneq ($(BUILD),i586-pc-haiku)
+-  WARNFLAGS := $(WARNFLAGS) -Werror
+-endif
++#ifneq ($(BUILD),i586-pc-haiku)
++#  WARNFLAGS := $(WARNFLAGS) -Werror
++#endif
+ 
+ CFLAGS := -D_BSD_SOURCE -I$(CURDIR)/include/ \
+ 	-I$(CURDIR)/src $(WARNFLAGS) $(CFLAGS)
