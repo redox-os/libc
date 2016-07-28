@@ -1,0 +1,27 @@
+diff -rupN rust/mk/cfg/i386-elf-redox.mk rust-redox/mk/cfg/i386-elf-redox.mk
+--- rust/mk/cfg/i386-elf-redox.mk	1969-12-31 16:00:00.000000000 -0800
++++ rust-redox/mk/cfg/i386-elf-redox.mk	2016-07-27 18:17:15.383842229 -0700
+@@ -0,0 +1,23 @@
++# i386-elf-redox configuration
++CC_i386-elf-redox=$(CC)
++CXX_i386-elf-redox=$(CXX)
++CPP_i386-elf-redox=$(CPP)
++AR_i386-elf-redox=$(AR)
++CFG_LIB_NAME_i386-elf-redox=lib$(1).so
++CFG_STATIC_LIB_NAME_i386-elf-redox=lib$(1).a
++CFG_LIB_GLOB_i386-elf-redox=lib$(1)-*.so
++CFG_LIB_DSYM_GLOB_i386-elf-redox=lib$(1)-*.dylib.dSYM
++CFG_JEMALLOC_CFLAGS_i386-elf-redox := -m32 $(CFLAGS)
++CFG_GCCISH_CFLAGS_i386-elf-redox :=  -g -fPIC -m32 $(CFLAGS)
++CFG_GCCISH_CXXFLAGS_i386-elf-redox := -fno-rtti $(CXXFLAGS)
++CFG_GCCISH_LINK_FLAGS_i386-elf-redox := -shared -fPIC -ldl -pthread  -lrt -g -m32
++CFG_GCCISH_DEF_FLAG_i386-elf-redox := -Wl,--export-dynamic,--dynamic-list=
++CFG_LLC_FLAGS_i386-elf-redox :=
++CFG_INSTALL_NAME_i386-elf-redox =
++CFG_EXE_SUFFIX_i386-elf-redox =
++CFG_WINDOWSY_i386-elf-redox :=
++CFG_UNIXY_i386-elf-redox := 1
++CFG_LDPATH_i386-elf-redox :=
++CFG_RUN_i386-elf-redox=$(2)
++CFG_RUN_TARG_i386-elf-redox=$(call CFG_RUN_i386-elf-redox,,$(2))
++CFG_GNU_TRIPLE_i386-elf-redox :=i386-elf-redox 

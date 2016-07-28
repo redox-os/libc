@@ -1,0 +1,12 @@
+diff -rupN expat/conftools/config.sub expat-redox/conftools/config.sub
+--- expat/conftools/config.sub	2012-03-24 12:12:39.000000000 -0700
++++ expat-redox/conftools/config.sub	2016-07-27 18:06:35.556122814 -0700
+@@ -1324,7 +1324,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* \
++	      | -sym* | -kopensolaris* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \

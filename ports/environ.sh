@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+name="$(basename "$0" .sh)"
+
 HOST="i386-elf-redox"
 BUILD="$(dirname "${PWD}")/build"
 PREFIX="${BUILD}/sysroot/usr"
@@ -19,21 +21,21 @@ export READELF="${HOST}-readelf"
 export STRIP="${HOST}-strip"
 
 function BROKEN {
-    printf "%-16s \e[1m\e[31mBROKEN\e[39m\e[0m\n" "$(basename "$0" .sh)"
+    printf "%-16s \e[1m\e[31mBROKEN\e[39m\e[0m\n" "$name"
 }
 
 function UNSTABLE {
-    printf "%-16s \e[1m\e[33mUNSTABLE\e[39m\e[0m\n" "$(basename "$0" .sh)"
+    printf "%-16s \e[1m\e[33mUNSTABLE\e[39m\e[0m\n" "$name"
 }
 
 function STABLE {
-    printf "%-16s \e[1m\e[32mSTABLE\e[39m\e[0m\n" "$(basename "$0" .sh)"
+    printf "%-16s \e[1m\e[32mSTABLE\e[39m\e[0m\n" "$name"
 }
 
 function DEPENDS {
     for depend in $*
     do
-        printf "%-16s \e[1m%s\e[0m\n" "$(basename "$0" .sh)" "$depend"
+        printf "%-16s \e[1m%s\e[0m\n" "$name" "$depend"
     done
 }
 
@@ -41,9 +43,9 @@ function fetch_template {
     case $1 in
         add)
             fetch_template fetch
-            if [ -d "${DIR}" ]
+            if [ -f "$name.patch" ]
             then
-                cp -rv "${DIR}"/* "${BUILD}/${DIR}"
+	        patch -p1 -d "${BUILD}/${DIR}" < "$name.patch"
             fi
             ;;
         remove)
@@ -59,12 +61,10 @@ function fetch_template {
                 then
                     wget "${SRC}" -O "${BUILD}/$(basename "${SRC}")"
                 fi
-                if [ ! -d "${BUILD}/${DIR}" ]
-                then
-                    pushd "${BUILD}"
-                    tar xf "$(basename "${SRC}")"
-                    popd
-                fi
+                rm -rf "${BUILD}/${DIR}"
+                pushd "${BUILD}"
+                tar xf "$(basename "${SRC}")"
+                popd
             elif [ -n "${GIT}" ]
             then
                 if [ ! -d "${BUILD}/${DIR}" ]

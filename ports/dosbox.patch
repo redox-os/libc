@@ -1,0 +1,729 @@
+diff -rupN dosbox/config.sub dosbox-redox/config.sub
+--- dosbox/config.sub	2010-05-10 10:43:54.000000000 -0700
++++ dosbox-redox/config.sub	2016-07-27 18:05:56.382451841 -0700
+@@ -1288,7 +1288,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* \
++	      | -sym* | -kopensolaris* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+diff -rupN dosbox/include/cross.h dosbox-redox/include/cross.h
+--- dosbox/include/cross.h	2010-05-10 10:43:54.000000000 -0700
++++ dosbox-redox/include/cross.h	2016-07-27 18:05:56.382451841 -0700
+@@ -46,7 +46,7 @@
+ 
+ 
+ #if defined (WIN32) || defined (OS2)				/* Win 32 & OS/2*/
+-#define CROSS_FILENAME(blah) 
++#define CROSS_FILENAME(blah)
+ #define CROSS_FILESPLIT '\\'
+ #define F_OK 0
+ #else
+@@ -61,6 +61,7 @@
+ #define ftruncate(blah,blah2) chsize(blah,blah2)
+ #endif
+ 
++#undef DB_HAVE_NO_POWF
+ //Solaris maybe others
+ #if defined (DB_HAVE_NO_POWF)
+ #include <math.h>
+@@ -79,7 +80,7 @@ public:
+ 
+ #if defined (WIN32)
+ 
+-#define WIN32_LEAN_AND_MEAN        // Exclude rarely-used stuff from 
++#define WIN32_LEAN_AND_MEAN        // Exclude rarely-used stuff from
+ #include <windows.h>
+ 
+ typedef struct dir_struct {
+@@ -93,7 +94,7 @@ typedef struct dir_struct {
+ //#include <sys/types.h> //Included above
+ #include <dirent.h>
+ 
+-typedef struct dir_struct { 
++typedef struct dir_struct {
+ 	DIR*  dir;
+ 	char base_path[CROSS_LEN];
+ } dir_information;
+diff -rupN dosbox/src/cpu/cpu.cpp dosbox-redox/src/cpu/cpu.cpp
+--- dosbox/src/cpu/cpu.cpp	2010-05-12 02:57:31.000000000 -0700
++++ dosbox-redox/src/cpu/cpu.cpp	2016-07-27 18:05:56.382451841 -0700
+@@ -22,7 +22,7 @@
+ #include <sstream>
+ #include "dosbox.h"
+ #include "cpu.h"
+-#include "memory.h"
++//#include "memory.h"
+ #include "debug.h"
+ #include "mapper.h"
+ #include "setup.h"
+@@ -82,18 +82,18 @@ void CPU_Core_Dynrec_Cache_Init(bool ena
+ void CPU_Core_Dynrec_Cache_Close(void);
+ #endif
+ 
+-/* In debug mode exceptions are tested and dosbox exits when 
+- * a unhandled exception state is detected. 
++/* In debug mode exceptions are tested and dosbox exits when
++ * a unhandled exception state is detected.
+  * USE CHECK_EXCEPT to raise an exception in that case to see if that exception
+  * solves the problem.
+- * 
++ *
+  * In non-debug mode dosbox doesn't do detection (and hence doesn't crash at
+  * that point). (game might crash later due to the unhandled exception) */
+ 
+ #if C_DEBUG
+ // #define CPU_CHECK_EXCEPT 1
+ // #define CPU_CHECK_IGNORE 1
+- /* Use CHECK_EXCEPT when something doesn't work to see if a exception is 
++ /* Use CHECK_EXCEPT when something doesn't work to see if a exception is
+  * needed that isn't enabled by default.*/
+ #else
+ /* NORMAL NO CHECKING => More Speed */
+@@ -221,7 +221,7 @@ bool CPU_PUSHF(Bitu use32) {
+ 		return CPU_PrepareException(EXCEPTION_GP,0);
+ 	}
+ 	FillFlags();
+-	if (use32) 
++	if (use32)
+ 		CPU_Push32(reg_flags & 0xfcffff);
+ 	else CPU_Push16(reg_flags);
+ 	return false;
+@@ -344,7 +344,7 @@ enum TSwitchType {
+ bool CPU_SwitchTask(Bitu new_tss_selector,TSwitchType tstype,Bitu old_eip) {
+ 	FillFlags();
+ 	TaskStateSegment new_tss;
+-	if (!new_tss.SetSelector(new_tss_selector)) 
++	if (!new_tss.SetSelector(new_tss_selector))
+ 		E_Exit("Illegal TSS for switch, selector=%x, switchtype=%x",new_tss_selector,tstype);
+ 	if (tstype==TSwitch_IRET) {
+ 		if (!new_tss.desc.IsBusy())
+@@ -448,7 +448,7 @@ bool CPU_SwitchTask(Bitu new_tss_selecto
+ 		new_fs = SegValue(fs);
+ 		new_gs = SegValue(gs);
+ 	} else {
+-	
++
+ 		/* Setup the new cr3 */
+ 		PAGING_SetDirBase(new_cr3);
+ 
+@@ -584,7 +584,7 @@ void CPU_Interrupt(Bitu num,Bitu type,Bi
+ 				CPU_Exception(EXCEPTION_GP,0);
+ 				return;
+ 			}
+-		} 
++		}
+ 
+ 		Descriptor gate;
+ 		if (!cpu.idt.GetDescriptor(num<<3,gate)) {
+@@ -694,7 +694,7 @@ void CPU_Interrupt(Bitu num,Bitu type,Bi
+ 						}
+ //						LOG_MSG("INT:Gate to inner level SS:%X SP:%X",n_ss,n_esp);
+ 						goto do_interrupt;
+-					} 
++					}
+ 					if (cs_dpl!=cpu.cpl)
+ 						E_Exit("Non-conforming intra privilege INT with DPL!=CPL");
+ 				case DESC_CODE_N_C_A:	case DESC_CODE_N_C_NA:
+@@ -719,7 +719,7 @@ do_interrupt:
+ 						CPU_Push16(oldeip);
+ 						if (type & CPU_INT_HAS_ERROR) CPU_Push16(cpu.exception.error);
+ 					}
+-					break;		
++					break;
+ 				default:
+ 					E_Exit("INT:Gate Selector points to illegal descriptor with type %x",cs_desc.Type());
+ 				}
+@@ -810,7 +810,7 @@ void CPU_IRET(bool use32,Bitu oldeip) {
+ 				return;
+ 			}
+ 		}
+-		/* Check if this is task IRET */	
++		/* Check if this is task IRET */
+ 		if (GETFLAG(NT)) {
+ 			if (GETFLAG(VM)) E_Exit("Pmode IRET with VM bit set");
+ 			CPU_CHECK_COND(!cpu_tss.IsValid(),
+@@ -857,7 +857,7 @@ void CPU_IRET(bool use32,Bitu oldeip) {
+ 				reg_esp=n_esp;
+ 				cpu.code.big=false;
+ 				SegSet16(cs,n_cs_sel);
+-				LOG(LOG_CPU,LOG_NORMAL)("IRET:Back to V86: CS:%X IP %X SS:%X SP %X FLAGS:%X",SegValue(cs),reg_eip,SegValue(ss),reg_esp,reg_flags);	
++				LOG(LOG_CPU,LOG_NORMAL)("IRET:Back to V86: CS:%X IP %X SS:%X SP %X FLAGS:%X",SegValue(cs),reg_eip,SegValue(ss),reg_esp,reg_flags);
+ 				return;
+ 			}
+ 			if (n_flags & FLAG_VM) E_Exit("IRET from pmode to v86 with CPL!=0");
+@@ -904,7 +904,7 @@ void CPU_IRET(bool use32,Bitu oldeip) {
+ 			"IRET with nonpresent code segment",
+ 			EXCEPTION_NP,n_cs_sel & 0xfffc)
+ 
+-		if (n_cs_rpl==cpu.cpl) {	
++		if (n_cs_rpl==cpu.cpl) {
+ 			/* Return to same level */
+ 
+ 			// commit point
+@@ -1096,7 +1096,7 @@ void CPU_CALL(bool use32,Bitu selector,B
+ 				"CALL:CODE:NC:DPL!=CPL",
+ 				EXCEPTION_GP,selector & 0xfffc)
+ 			LOG(LOG_CPU,LOG_NORMAL)("CALL:CODE:NC to %X:%X",selector,offset);
+-			goto call_code;	
++			goto call_code;
+ 		case DESC_CODE_N_C_A:case DESC_CODE_N_C_NA:
+ 		case DESC_CODE_R_C_A:case DESC_CODE_R_C_NA:
+ 			CPU_CHECK_COND(call.DPL()>cpu.cpl,
+@@ -1123,7 +1123,7 @@ call_code:
+ 			cpu.code.big=call.Big()>0;
+ 			Segs.val[cs]=(selector & 0xfffc) | cpu.cpl;
+ 			return;
+-		case DESC_386_CALL_GATE: 
++		case DESC_386_CALL_GATE:
+ 		case DESC_286_CALL_GATE:
+ 			{
+ 				CPU_CHECK_COND(call.DPL()<cpu.cpl,
+@@ -1194,7 +1194,7 @@ call_code:
+ 						// catch pagefaults
+ 						if (call.saved.gate.paramcount&31) {
+ 							if (call.Type()==DESC_386_CALL_GATE) {
+-								for (Bits i=(call.saved.gate.paramcount&31)-1;i>=0;i--) 
++								for (Bits i=(call.saved.gate.paramcount&31)-1;i>=0;i--)
+ 									mem_readd(o_stack+i*4);
+ 							} else {
+ 								for (Bits i=(call.saved.gate.paramcount&31)-1;i>=0;i--)
+@@ -1230,7 +1230,7 @@ call_code:
+ 							CPU_Push32(o_ss);		//save old stack
+ 							CPU_Push32(o_esp);
+ 							if (call.saved.gate.paramcount&31)
+-								for (Bits i=(call.saved.gate.paramcount&31)-1;i>=0;i--) 
++								for (Bits i=(call.saved.gate.paramcount&31)-1;i>=0;i--)
+ 									CPU_Push32(mem_readd(o_stack+i*4));
+ 							CPU_Push32(oldcs);
+ 							CPU_Push32(oldeip);
+@@ -1244,7 +1244,7 @@ call_code:
+ 							CPU_Push16(oldeip);
+ 						}
+ 
+-						break;		
++						break;
+ 					} else if (n_cs_dpl > cpu.cpl)
+ 						E_Exit("CALL:GATE:CS DPL>CPL");		// or #GP(sel)
+ 				case DESC_CODE_N_C_A:case DESC_CODE_N_C_NA:
+@@ -1333,7 +1333,7 @@ void CPU_RET(bool use32,Bitu bytes,Bitu
+ 			"RET:CS beyond limits",
+ 			EXCEPTION_GP,selector & 0xfffc)
+ 
+-		if (cpu.cpl==rpl) {	
++		if (cpu.cpl==rpl) {
+ 			/* Return to same level */
+ 			switch (desc.Type()) {
+ 			case DESC_CODE_N_NC_A:case DESC_CODE_N_NC_NA:
+@@ -1509,7 +1509,7 @@ bool CPU_LTR(Bitu selector) {
+ 		cpu_tss.desc.SetBusy(true);
+ 		cpu_tss.SaveSelector();
+ 	} else {
+-		/* Descriptor was no available TSS descriptor */ 
++		/* Descriptor was no available TSS descriptor */
+ 		LOG(LOG_CPU,LOG_NORMAL)("LTR failed, selector=%X (type=%X)",selector,desc.Type());
+ 		return CPU_PrepareException(EXCEPTION_GP,selector);
+ 	}
+@@ -1734,7 +1734,7 @@ Bitu CPU_SMSW(void) {
+ bool CPU_LMSW(Bitu word) {
+ 	if (cpu.pmode && (cpu.cpl>0)) return CPU_PrepareException(EXCEPTION_GP,0);
+ 	word&=0xf;
+-	if (cpu.cr0 & 1) word|=1; 
++	if (cpu.cr0 & 1) word|=1;
+ 	word|=(cpu.cr0&0xfffffff0);
+ 	CPU_SET_CRX(0,word);
+ 	return false;
+@@ -1748,9 +1748,9 @@ void CPU_ARPL(Bitu & dest_sel,Bitu src_s
+ 		SETFLAGBIT(ZF,true);
+ 	} else {
+ 		SETFLAGBIT(ZF,false);
+-	} 
++	}
+ }
+-	
++
+ void CPU_LAR(Bitu selector,Bitu & ar) {
+ 	FillFlags();
+ 	if (selector == 0) {
+@@ -1781,7 +1781,7 @@ void CPU_LAR(Bitu selector,Bitu & ar) {
+ 
+ 	case DESC_386_TSS_A:		case DESC_386_TSS_B:
+ 	case DESC_386_CALL_GATE:
+-	
++
+ 
+ 	case DESC_DATA_EU_RO_NA:	case DESC_DATA_EU_RO_A:
+ 	case DESC_DATA_EU_RW_NA:	case DESC_DATA_EU_RW_A:
+@@ -1822,7 +1822,7 @@ void CPU_LSL(Bitu selector,Bitu & limit)
+ 	case DESC_LDT:
+ 	case DESC_286_TSS_A:
+ 	case DESC_286_TSS_B:
+-	
++
+ 	case DESC_386_TSS_A:
+ 	case DESC_386_TSS_B:
+ 
+@@ -1830,7 +1830,7 @@ void CPU_LSL(Bitu selector,Bitu & limit)
+ 	case DESC_DATA_EU_RW_NA:	case DESC_DATA_EU_RW_A:
+ 	case DESC_DATA_ED_RO_NA:	case DESC_DATA_ED_RO_A:
+ 	case DESC_DATA_ED_RW_NA:	case DESC_DATA_ED_RW_A:
+-	
++
+ 	case DESC_CODE_N_NC_A:		case DESC_CODE_N_NC_NA:
+ 	case DESC_CODE_R_NC_A:		case DESC_CODE_R_NC_NA:
+ 		if (desc.DPL()<cpu.cpl || desc.DPL() < rpl) {
+@@ -1858,8 +1858,8 @@ void CPU_VERR(Bitu selector) {
+ 		return;
+ 	}
+ 	switch (desc.Type()){
+-	case DESC_CODE_R_C_A:		case DESC_CODE_R_C_NA:	
+-		//Conforming readable code segments can be always read 
++	case DESC_CODE_R_C_A:		case DESC_CODE_R_C_NA:
++		//Conforming readable code segments can be always read
+ 		break;
+ 	case DESC_DATA_EU_RO_NA:	case DESC_DATA_EU_RO_A:
+ 	case DESC_DATA_EU_RW_NA:	case DESC_DATA_EU_RW_A:
+@@ -2011,10 +2011,10 @@ bool CPU_CPUID(void) {
+ 	if (CPU_ArchitectureType<CPU_ARCHTYPE_486NEWSLOW) return false;
+ 	switch (reg_eax) {
+ 	case 0:	/* Vendor ID String and maximum level? */
+-		reg_eax=1;  /* Maximum level */ 
+-		reg_ebx='G' | ('e' << 8) | ('n' << 16) | ('u'<< 24); 
+-		reg_edx='i' | ('n' << 8) | ('e' << 16) | ('I'<< 24); 
+-		reg_ecx='n' | ('t' << 8) | ('e' << 16) | ('l'<< 24); 
++		reg_eax=1;  /* Maximum level */
++		reg_ebx='G' | ('e' << 8) | ('n' << 16) | ('u'<< 24);
++		reg_edx='i' | ('n' << 8) | ('e' << 16) | ('I'<< 24);
++		reg_ecx='n' | ('t' << 8) | ('e' << 16) | ('l'<< 24);
+ 		break;
+ 	case 1:	/* get processor type/family/model/stepping and feature flags */
+ 		if ((CPU_ArchitectureType==CPU_ARCHTYPE_486NEWSLOW) ||
+@@ -2071,7 +2071,7 @@ void CPU_ENTER(bool use32,Bitu bytes,Bit
+ 		mem_writew(SegPhys(ss)+sp_index,reg_bp);
+ 		reg_bp=(Bit16u)(reg_esp-2);
+ 		if (level) {
+-			for (Bitu i=1;i<level;i++) {	
++			for (Bitu i=1;i<level;i++) {
+ 				sp_index-=2;bp_index-=2;
+ 				mem_writew(SegPhys(ss)+sp_index,mem_readw(SegPhys(ss)+bp_index));
+ 			}
+@@ -2083,7 +2083,7 @@ void CPU_ENTER(bool use32,Bitu bytes,Bit
+         mem_writed(SegPhys(ss)+sp_index,reg_ebp);
+ 		reg_ebp=(reg_esp-4);
+ 		if (level) {
+-			for (Bitu i=1;i<level;i++) {	
++			for (Bitu i=1;i<level;i++) {
+ 				sp_index-=4;bp_index-=4;
+ 				mem_writed(SegPhys(ss)+sp_index,mem_readd(SegPhys(ss)+bp_index));
+ 			}
+@@ -2109,10 +2109,10 @@ static void CPU_CycleIncrease(bool press
+ 		} else {
+ 			CPU_CycleMax = (Bit32s)(CPU_CycleMax + CPU_CycleUp);
+ 		}
+-	    
++
+ 		CPU_CycleLeft=0;CPU_Cycles=0;
+ 		if (CPU_CycleMax==old_cycles) CPU_CycleMax++;
+-		if(CPU_CycleMax > 15000 ) 
++		if(CPU_CycleMax > 15000 )
+ 			LOG_MSG("CPU speed: fixed %d cycles. If you need more than 20000, try core=dynamic in DOSBox's options.",CPU_CycleMax);
+ 		else
+ 			LOG_MSG("CPU speed: fixed %d cycles.",CPU_CycleMax);
+@@ -2185,14 +2185,14 @@ public:
+ 		reg_esi=0;
+ 		reg_ebp=0;
+ 		reg_esp=0;
+-	
++
+ 		SegSet16(cs,0);
+ 		SegSet16(ds,0);
+ 		SegSet16(es,0);
+ 		SegSet16(fs,0);
+ 		SegSet16(gs,0);
+ 		SegSet16(ss,0);
+-	
++
+ 		CPU_SetFlags(FLAG_IF,FMASK_ALL);		//Enable interrupts
+ 		cpu.cr0=0xffffffff;
+ 		CPU_SET_CRX(0,0);						//Initialize
+@@ -2226,7 +2226,7 @@ public:
+ #endif
+ 		MAPPER_AddHandler(CPU_CycleDecrease,MK_f11,MMOD1,"cycledown","Dec Cycles");
+ 		MAPPER_AddHandler(CPU_CycleIncrease,MK_f12,MMOD1,"cycleup"  ,"Inc Cycles");
+-		Change_Config(configuration);	
++		Change_Config(configuration);
+ 		CPU_JMP(false,0,0,0);					//Setup the first cpu core
+ 	}
+ 	bool Change_Config(Section* newconfig){
+@@ -2400,7 +2400,7 @@ public:
+ 	}
+ 	~CPU(){ /* empty */};
+ };
+-	
++
+ static CPU * test;
+ 
+ void CPU_ShutDown(Section* sec) {
+diff -rupN dosbox/src/dos/cdrom_image.cpp dosbox-redox/src/dos/cdrom_image.cpp
+--- dosbox/src/dos/cdrom_image.cpp	2010-05-10 10:43:54.000000000 -0700
++++ dosbox-redox/src/dos/cdrom_image.cpp	2016-07-27 18:05:56.382451841 -0700
+@@ -103,7 +103,7 @@ bool CDROM_Interface_Image::AudioFile::r
+ 	} else {
+ 		memcpy(buffer, sample->buffer, count);
+ 	}
+-	
++
+ 	return !(sample->flags & SOUND_SAMPLEFLAG_ERROR);
+ }
+ 
+@@ -112,7 +112,7 @@ int CDROM_Interface_Image::AudioFile::ge
+ 	int time = 1;
+ 	int shift = 0;
+ 	if (!(sample->flags & SOUND_SAMPLEFLAG_CANSEEK)) return -1;
+-	
++
+ 	while (true) {
+ 		int success = Sound_Seek(sample, (unsigned int)(shift + time));
+ 		if (!success) {
+@@ -133,7 +133,7 @@ CDROM_Interface_Image* CDROM_Interface_I
+ CDROM_Interface_Image::imagePlayer CDROM_Interface_Image::player = {
+ 	NULL, NULL, NULL, {0}, 0, 0, 0, false, false };
+ 
+-	
++
+ CDROM_Interface_Image::CDROM_Interface_Image(Bit8u subUnit)
+ {
+ 	images[subUnit] = this;
+@@ -166,7 +166,7 @@ bool CDROM_Interface_Image::SetDevice(ch
+ {
+ 	if (LoadCueSheet(path)) return true;
+ 	if (LoadIsoFile(path)) return true;
+-	
++
+ 	// print error message on dosbox console
+ 	char buf[MAX_LINE_LENGTH];
+ 	snprintf(buf, MAX_LINE_LENGTH, "Could not load image file: %s\n", path);
+@@ -236,7 +236,7 @@ bool CDROM_Interface_Image::PlayAudioSec
+ 	if(track >= 0 && tracks[track].attr == 0x40) {
+ 		LOG(LOG_MISC,LOG_WARN)("Game tries to play the data track. Not doing this");
+ 		player.isPlaying = false;
+-		//Unclear wether return false should be here. 
++		//Unclear wether return false should be here.
+ 		//specs say that this function returns at once and games should check the status wether the audio is actually playing
+ 		//Real drives either fail or succeed as well
+ 	} else player.isPlaying = true;
+@@ -264,7 +264,7 @@ bool CDROM_Interface_Image::ReadSectors(
+ 	int sectorSize = raw ? RAW_SECTOR_SIZE : COOKED_SECTOR_SIZE;
+ 	Bitu buflen = num * sectorSize;
+ 	Bit8u* buf = new Bit8u[buflen];
+-	
++
+ 	bool success = true; //Gobliiins reads 0 sectors
+ 	for(unsigned long i = 0; i < num; i++) {
+ 		success = ReadSector(&buf[i * sectorSize], raw, sector + i);
+@@ -286,7 +286,7 @@ int CDROM_Interface_Image::GetTrack(int
+ {
+ 	vector<Track>::iterator i = tracks.begin();
+ 	vector<Track>::iterator end = tracks.end() - 1;
+-	
++
+ 	while(i != end) {
+ 		Track &curr = *i;
+ 		Track &next = *(i + 1);
+@@ -300,7 +300,7 @@ bool CDROM_Interface_Image::ReadSector(B
+ {
+ 	int track = GetTrack(sector) - 1;
+ 	if (track < 0) return false;
+-	
++
+ 	int seek = tracks[track].skip + (sector - tracks[track].start) * tracks[track].sectorSize;
+ 	int length = (raw ? RAW_SECTOR_SIZE : COOKED_SECTOR_SIZE);
+ 	if (tracks[track].sectorSize != RAW_SECTOR_SIZE && raw) return false;
+@@ -318,14 +318,14 @@ void CDROM_Interface_Image::CDAudioCallB
+ 		player.channel->AddSilence();
+ 		return;
+ 	}
+-	
++
+ 	SDL_mutexP(player.mutex);
+ 	while (player.bufLen < (Bits)len) {
+ 		bool success;
+ 		if (player.targetFrame > player.currFrame)
+ 			success = player.cd->ReadSector(&player.buffer[player.bufLen], true, player.currFrame);
+ 		else success = false;
+-		
++
+ 		if (success) {
+ 			player.currFrame++;
+ 			player.bufLen += RAW_SECTOR_SIZE;
+@@ -348,7 +348,7 @@ void CDROM_Interface_Image::CDAudioCallB
+ bool CDROM_Interface_Image::LoadIsoFile(char* filename)
+ {
+ 	tracks.clear();
+-	
++
+ 	// data track
+ 	Track track = {0, 0, 0, 0, 0, 0, false, NULL};
+ 	bool error;
+@@ -359,25 +359,25 @@ bool CDROM_Interface_Image::LoadIsoFile(
+ 	}
+ 	track.number = 1;
+ 	track.attr = 0x40;//data
+-	
++
+ 	// try to detect iso type
+ 	if (CanReadPVD(track.file, COOKED_SECTOR_SIZE, false)) {
+ 		track.sectorSize = COOKED_SECTOR_SIZE;
+ 		track.mode2 = false;
+ 	} else if (CanReadPVD(track.file, RAW_SECTOR_SIZE, false)) {
+ 		track.sectorSize = RAW_SECTOR_SIZE;
+-		track.mode2 = false;		
++		track.mode2 = false;
+ 	} else if (CanReadPVD(track.file, 2336, true)) {
+ 		track.sectorSize = 2336;
+-		track.mode2 = true;		
++		track.mode2 = true;
+ 	} else if (CanReadPVD(track.file, RAW_SECTOR_SIZE, true)) {
+ 		track.sectorSize = RAW_SECTOR_SIZE;
+-		track.mode2 = true;		
++		track.mode2 = true;
+ 	} else return false;
+-	
++
+ 	track.length = track.file->getLength() / track.sectorSize;
+ 	tracks.push_back(track);
+-	
++
+ 	// leadout track
+ 	track.number = 2;
+ 	track.attr = 0;
+@@ -418,6 +418,8 @@ static string dirname(char * file) {
+ 
+ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
+ {
++	return false;
++	/*
+ 	Track track = {0, 0, 0, 0, 0, 0, false, NULL};
+ 	tracks.clear();
+ 	int shift = 0;
+@@ -432,30 +434,30 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 	ifstream in;
+ 	in.open(cuefile, ios::in);
+ 	if (in.fail()) return false;
+-	
++
+ 	while(!in.eof()) {
+ 		// get next line
+ 		char buf[MAX_LINE_LENGTH];
+ 		in.getline(buf, MAX_LINE_LENGTH);
+ 		if (in.fail() && !in.eof()) return false;  // probably a binary file
+ 		istringstream line(buf);
+-		
++
+ 		string command;
+ 		GetCueKeyword(command, line);
+-		
++
+ 		if (command == "TRACK") {
+ 			if (canAddTrack) success = AddTrack(track, shift, prestart, totalPregap, currPregap);
+ 			else success = true;
+-			
++
+ 			track.start = 0;
+ 			track.skip = 0;
+ 			currPregap = 0;
+ 			prestart = 0;
+-	
++
+ 			line >> track.number;
+ 			string type;
+ 			GetCueKeyword(type, line);
+-			
++
+ 			if (type == "AUDIO") {
+ 				track.sectorSize = RAW_SECTOR_SIZE;
+ 				track.attr = 0;
+@@ -477,7 +479,7 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 				track.attr = 0x40;
+ 				track.mode2 = true;
+ 			} else success = false;
+-			
++
+ 			canAddTrack = true;
+ 		}
+ 		else if (command == "INDEX") {
+@@ -485,7 +487,7 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 			line >> index;
+ 			int frame;
+ 			success = GetCueFrame(frame, line);
+-			
++
+ 			if (index == 1) track.start = frame;
+ 			else if (index == 0) prestart = frame;
+ 			// ignore other indices
+@@ -494,7 +496,7 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 			if (canAddTrack) success = AddTrack(track, shift, prestart, totalPregap, currPregap);
+ 			else success = true;
+ 			canAddTrack = false;
+-			
++
+ 			string filename;
+ 			GetCueString(filename, line);
+ 			GetRealFileName(filename, pathname);
+@@ -507,11 +509,11 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 				track.file = new BinaryFile(filename.c_str(), error);
+ 			}
+ #if defined(C_SDL_SOUND)
+-			//The next if has been surpassed by the else, but leaving it in as not 
++			//The next if has been surpassed by the else, but leaving it in as not
+ 			//to break existing cue sheets that depend on this.(mine with OGG tracks specifying MP3 as type)
+ 			else if (type == "WAVE" || type == "AIFF" || type == "MP3") {
+ 				track.file = new AudioFile(filename.c_str(), error);
+-			} else { 
++			} else {
+ 				const Sound_DecoderInfo **i;
+ 				for (i = Sound_AvailableDecoders(); *i != NULL; i++) {
+ 					if (*(*i)->extensions == type) {
+@@ -539,7 +541,7 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 	}
+ 	// add last track
+ 	if (!AddTrack(track, shift, prestart, totalPregap, currPregap)) return false;
+-	
++
+ 	// add leadout track
+ 	track.number++;
+ 	track.attr = 0;//sync with load iso
+@@ -549,6 +551,7 @@ bool CDROM_Interface_Image::LoadCueSheet
+ 	if(!AddTrack(track, shift, 0, totalPregap, 0)) return false;
+ 
+ 	return true;
++	*/
+ }
+ 
+ bool CDROM_Interface_Image::AddTrack(Track &curr, int &shift, int prestart, int &totalPregap, int currPregap)
+@@ -559,7 +562,7 @@ bool CDROM_Interface_Image::AddTrack(Tra
+ 		if (prestart > curr.start) return false;
+ 		skip = curr.start - prestart;
+ 	} else skip = 0;
+-	
++
+ 	// first track (track number must be 1)
+ 	if (tracks.empty()) {
+ 		if (curr.number != 1) return false;
+@@ -569,14 +572,14 @@ bool CDROM_Interface_Image::AddTrack(Tra
+ 		tracks.push_back(curr);
+ 		return true;
+ 	}
+-	
++
+ 	Track &prev = *(tracks.end() - 1);
+-	
++
+ 	// current track consumes data from the same file as the previous
+ 	if (prev.file == curr.file) {
+ 		curr.start += shift;
+ 		prev.length = curr.start + totalPregap - prev.start - skip;
+-		curr.skip += prev.skip + prev.length * prev.sectorSize + skip * curr.sectorSize;		
++		curr.skip += prev.skip + prev.length * prev.sectorSize + skip * curr.sectorSize;
+ 		totalPregap += currPregap;
+ 		curr.start += totalPregap;
+ 	// current track uses a different file as the previous track
+@@ -584,19 +587,19 @@ bool CDROM_Interface_Image::AddTrack(Tra
+ 		int tmp = prev.file->getLength() - prev.skip;
+ 		prev.length = tmp / prev.sectorSize;
+ 		if (tmp % prev.sectorSize != 0) prev.length++; // padding
+-		
++
+ 		curr.start += prev.start + prev.length + currPregap;
+ 		curr.skip = skip * curr.sectorSize;
+ 		shift += prev.start + prev.length;
+ 		totalPregap = currPregap;
+ 	}
+-	
++
+ 	// error checks
+ 	if (curr.number <= 1) return false;
+ 	if (prev.number + 1 != curr.number) return false;
+ 	if (curr.start < prev.start + prev.length) return false;
+ 	if (curr.length < 0) return false;
+-	
++
+ 	tracks.push_back(curr);
+ 	return true;
+ }
+@@ -616,7 +619,7 @@ bool CDROM_Interface_Image::GetRealFileN
+ 	// check if file exists
+ 	struct stat test;
+ 	if (stat(filename.c_str(), &test) == 0) return true;
+-	
++
+ 	// check if file with path relative to cue file exists
+ 	string tmpstr(pathname + "/" + filename);
+ 	if (stat(tmpstr.c_str(), &test) == 0) {
+@@ -629,7 +632,7 @@ bool CDROM_Interface_Image::GetRealFileN
+ 	safe_strncpy(tmp, filename.c_str(), CROSS_LEN);
+ 	Bit8u drive;
+ 	if (!DOS_MakeName(tmp, fullname, &drive)) return false;
+-	
++
+ 	localDrive *ldp = dynamic_cast<localDrive*>(Drives[drive]);
+ 	if (ldp) {
+ 		ldp->GetSystemFilename(tmp, fullname);
+@@ -638,7 +641,7 @@ bool CDROM_Interface_Image::GetRealFileN
+ 			return true;
+ 		}
+ 	}
+-	
++
+ 	return false;
+ }
+ 
+@@ -646,7 +649,7 @@ bool CDROM_Interface_Image::GetCueKeywor
+ {
+ 	in >> keyword;
+ 	for(Bitu i = 0; i < keyword.size(); i++) keyword[i] = toupper(keyword[i]);
+-	
++
+ 	return true;
+ }
+ 
+@@ -657,7 +660,7 @@ bool CDROM_Interface_Image::GetCueFrame(
+ 	int min, sec, fr;
+ 	bool success = sscanf(msf.c_str(), "%d:%d:%d", &min, &sec, &fr) == 3;
+ 	frames = MSF_TO_FRAMES(min, sec, fr);
+-	
++
+ 	return success;
+ }
+ 
+@@ -684,7 +687,7 @@ void CDROM_Interface_Image::ClearTracks(
+ 	vector<Track>::iterator i = tracks.begin();
+ 	vector<Track>::iterator end = tracks.end();
+ 
+-	TrackFile* last = NULL;	
++	TrackFile* last = NULL;
+ 	while(i != end) {
+ 		Track &curr = *i;
+ 		if (curr.file != last) {
+diff -rupN dosbox/src/misc/cross.cpp dosbox-redox/src/misc/cross.cpp
+--- dosbox/src/misc/cross.cpp	2010-05-10 10:43:54.000000000 -0700
++++ dosbox-redox/src/misc/cross.cpp	2016-07-27 18:05:56.382451841 -0700
+@@ -103,6 +103,7 @@ void Cross::ResolveHomedir(std::string &
+ 	if(temp_line.size() == 1 || temp_line[1] == CROSS_FILESPLIT) { //The ~ and ~/ variant
+ 		char * home = getenv("HOME");
+ 		if(home) temp_line.replace(0,1,std::string(home));
++/*
+ #if defined HAVE_SYS_TYPES_H && defined HAVE_PWD_H
+ 	} else { // The ~username variant
+ 		std::string::size_type namelen = temp_line.find(CROSS_FILESPLIT);
+@@ -111,6 +112,7 @@ void Cross::ResolveHomedir(std::string &
+ 		struct passwd* pass = getpwnam(username.c_str());
+ 		if(pass) temp_line.replace(0,namelen,pass->pw_dir); //namelen -1 +1(for the ~)
+ #endif // USERNAME lookup code
++*/
+ 	}
+ }
+ 
