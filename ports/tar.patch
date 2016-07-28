@@ -1,0 +1,126 @@
+diff -rupN tar/build-aux/config.sub tar-redox/build-aux/config.sub
+--- tar/build-aux/config.sub	2014-03-25 23:58:15.000000000 -0700
++++ tar-redox/build-aux/config.sub	2016-07-27 18:17:33.217278397 -0700
+@@ -1354,7 +1354,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+diff -rupN tar/src/tar.c tar-redox/src/tar.c
+--- tar/src/tar.c	2014-07-27 13:30:40.000000000 -0700
++++ tar-redox/src/tar.c	2016-07-27 18:17:33.220611749 -0700
+@@ -737,7 +737,7 @@ static struct argp_option options[] = {
+       " for FILE itself"), GRID+1 },
+   {"exclude-ignore", EXCLUDE_IGNORE_OPTION, N_("FILE"), 0,
+     N_("read exclude patterns for each directory from FILE, if it exists"),
+-   GRID+1 }, 
++   GRID+1 },
+   {"exclude-ignore-recursive", EXCLUDE_IGNORE_RECURSIVE_OPTION, N_("FILE"), 0,
+     N_("read exclude patterns for each directory and its subdirectories "
+        "from FILE, if it exists"), GRID+1 },
+@@ -1201,7 +1201,7 @@ tar_help_filter (int key, const char *te
+ 
+     case LZOP_OPTION:
+       s = xasprintf (_("filter the archive through %s"), LZOP_PROGRAM);
+-      
++
+     case 'J':
+       s = xasprintf (_("filter the archive through %s"), XZ_PROGRAM);
+       break;
+@@ -1341,14 +1341,14 @@ static char filename_terminator;
+ static char const *const sort_mode_arg[] = {
+   "none",
+   "name",
+-  "inode",
++  //"inode",
+   NULL
+ };
+ 
+ static int sort_mode_flag[] = {
+     SAVEDIR_SORT_NONE,
+     SAVEDIR_SORT_NAME,
+-    SAVEDIR_SORT_INODE
++    //SAVEDIR_SORT_INODE
+ };
+ 
+ ARGMATCH_VERIFY (sort_mode_arg, sort_mode_flag);
+@@ -1794,7 +1794,7 @@ parse_opt (int key, char *arg, struct ar
+     case EXCLUDE_IGNORE_RECURSIVE_OPTION:
+       excfile_add (arg, EXCL_RECURSIVE);
+       break;
+-      
++
+     case EXCLUDE_TAG_OPTION:
+       add_exclusion_tag (arg, exclusion_tag_contents, NULL);
+       break;
+@@ -1814,7 +1814,7 @@ parse_opt (int key, char *arg, struct ar
+     case EXCLUDE_VCS_IGNORES_OPTION:
+       exclude_vcs_ignores ();
+       break;
+-      
++
+     case FORCE_LOCAL_OPTION:
+       force_local_option = true;
+       break;
+@@ -2327,7 +2327,7 @@ decode_options (int argc, char **argv)
+   blocking_factor = DEFAULT_BLOCKING;
+   record_size = DEFAULT_BLOCKING * BLOCKSIZE;
+   excluded = new_exclude ();
+-  
++
+   newer_mtime_option.tv_sec = TYPE_MINIMUM (time_t);
+   newer_mtime_option.tv_nsec = -1;
+   recursion_option = FNM_LEADING_DIR;
+@@ -2336,7 +2336,7 @@ decode_options (int argc, char **argv)
+   tar_sparse_minor = 0;
+ 
+   savedir_sort_order = SAVEDIR_SORT_NONE;
+-  
++
+   owner_option = -1; owner_name_option = NULL;
+   group_option = -1; group_name_option = NULL;
+ 
+@@ -2492,7 +2492,7 @@ decode_options (int argc, char **argv)
+   if (listed_incremental_option
+       && NEWER_OPTION_INITIALIZED (newer_mtime_option))
+     option_conflict_error ("--listed-incremental", "--newer");
+-  
++
+   if (incremental_level != -1 && !listed_incremental_option)
+     WARN ((0, 0,
+ 	   _("--level is meaningless without --listed-incremental")));
+@@ -2580,10 +2580,10 @@ decode_options (int argc, char **argv)
+   if (one_top_level_option)
+     {
+       char *base;
+-      
++
+       if (absolute_names_option)
+ 	option_conflict_error ("--one-top-level", "--absolute-names");
+-      
++
+       if (!one_top_level_dir)
+ 	{
+ 	  /* If the user wants to guarantee that everything is under one
+@@ -2728,7 +2728,7 @@ main (int argc, char **argv)
+   exit_failure = TAREXIT_FAILURE;
+   exit_status = TAREXIT_SUCCESS;
+   error_hook = checkpoint_flush_actions;
+-  
++
+   filename_terminator = '\n';
+   set_quoting_style (0, DEFAULT_QUOTING_STYLE);
+ 
+@@ -2803,7 +2803,7 @@ main (int argc, char **argv)
+     }
+ 
+   checkpoint_finish ();
+-  
++
+   if (totals_option)
+     print_total_stats ();
+ 

@@ -1,0 +1,12 @@
+diff -rupN freeciv/bootstrap/config.sub freeciv-redox/bootstrap/config.sub
+--- freeciv/bootstrap/config.sub	2004-09-20 17:58:58.000000000 -0700
++++ freeciv-redox/bootstrap/config.sub	2016-07-27 18:06:44.842867836 -0700
+@@ -1023,7 +1023,7 @@ case $os in
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* \
++	      | -aos* | -redox* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \

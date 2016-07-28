@@ -1,0 +1,111 @@
+diff -rupN 2H4U/scripts/Makefile 2H4U-redox/scripts/Makefile
+--- 2H4U/scripts/Makefile	2006-06-30 03:57:46.000000000 -0700
++++ 2H4U-redox/scripts/Makefile	2016-07-27 18:01:44.337133422 -0700
+@@ -2,62 +2,62 @@
+ 
+ OBJECTS	= ../objs/Engine.o ../objs/bonus.o ../objs/highscore.o ../objs/launcher.o ../objs/son.o ../objs/Param.o ../objs/brick.o ../objs/intro.o ../objs/main.o ../objs/terrain.o ../objs/balle.o ../objs/figure.o ../objs/jeu.o ../objs/menu.o
+ TARGET	=	../2H4U
+-LIBS	=	$(shell sdl-config --libs) -lSDL_image -lSDL_mixer -lSDL_ttf
++LIBS	=	-lSDL_image -lSDL_mixer -lSDL_ttf -lSDL -lfreetype -lpng -lz
+ 
+ all: dirs $(OBJECTS)
+-	g++ $(LIBS) -o $(TARGET) $(OBJECTS)
++	$(CXX) -o $(TARGET) $(OBJECTS) $(LIBS)
+ 
+ dirs:
+ 	mkdir -p ../objs
+ 
+ ../objs/Engine.o: ../sources/Engine.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/bonus.o: ../sources/bonus.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/highscore.o: ../sources/highscore.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/launcher.o: ../sources/launcher.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/son.o: ../sources/son.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/Param.o: ../sources/Param.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/brick.o: ../sources/brick.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/intro.o: ../sources/intro.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/main.o: ../sources/main.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/terrain.o: ../sources/terrain.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/balle.o: ../sources/balle.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/figure.o: ../sources/figure.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/jeu.o: ../sources/jeu.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ ../objs/menu.o: ../sources/menu.cpp
+-	g++ -o $@ -c $<
+-	
++	$(CXX) -o $@ -c $<
++
+ rebuild:
+-	superclean
++	distclean
+ 	all
+-	
++
+ clean:
+ 	rm -rf $(OBJECTS)
+ 
+-superclean : clean
++distclean : clean
+ 	rm -rf $(TARGET)
+diff -rupN 2H4U/sources/sdl_includes.h 2H4U-redox/sources/sdl_includes.h
+--- 2H4U/sources/sdl_includes.h	2006-10-02 10:14:50.000000000 -0700
++++ 2H4U-redox/sources/sdl_includes.h	2016-07-27 18:01:44.337133422 -0700
+@@ -20,7 +20,7 @@
+ //Fichier qui contient tous les includes de SDL.
+ 
+ //Uncomment the following line to disables sounds in 2H4U.
+-//#define NO_SOUND_2H4U
++#define NO_SOUND_2H4U
+ 
+ //IF compiling with MAC
+ #ifdef MAC_OS
