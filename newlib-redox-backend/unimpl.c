@@ -8,15 +8,15 @@
     return -1; \
 }
 
-void abort() {
-    write (2, "Abort called.\n", sizeof("Abort called.\n")-1);
-    _exit (1);
-}
-
 int access(const char * path, int amode){
     //All permissions granted, if file exists
     struct stat sbuf;
     return stat(path, &sbuf);
+}
+
+unsigned int alarm(unsigned int seconds) {
+    fprintf(stderr, "unimplemented: alarm");
+    return 0;
 }
 
 int chmod(const char * path, mode_t mode) {
