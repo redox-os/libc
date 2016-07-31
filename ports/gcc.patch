@@ -1,0 +1,12 @@
+diff -rupN gcc-4.6.4/config.sub gcc-4.6.4-redox/config.sub
+--- gcc-4.6.4/config.sub	2010-05-25 07:22:07.000000000 -0600
++++ gcc-4.6.4-redox/config.sub	2016-07-31 12:16:40.465959649 -0600
+@@ -1295,7 +1295,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* \
++	      | -sym* | -kopensolaris* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
