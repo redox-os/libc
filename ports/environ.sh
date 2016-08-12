@@ -72,6 +72,12 @@ function fetch_template {
                     pushd "${BUILD}"
                     git clone --recursive "${GIT}"
                     popd
+                else
+                    pushd "${BUILD}/${DIR}"
+                    git clean -fd
+                    git reset --hard
+                    git pull
+                    popd
                 fi
             fi
             ;;
