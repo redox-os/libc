@@ -4,16 +4,16 @@ all: binutils bin/c-test bin/ed bin/lua bin/luac bin/nasm bin/ndisasm bin/pcc bi
 
 binutils: bin/addr2line bin/ar bin/as bin/c++filt bin/elfedit bin/gprof bin/ld bin/ld.bfd bin/nm bin/objcopy bin/objdump bin/ranlib bin/readelf bin/size bin/strings bin/strip
 
-bin/c-test: c-test.c
+bin/c-test: tests/c-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
 
-bin/ed: ed.c
+bin/ed: tests/ed.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
 
-bin/sdl-test: sdl-test.c
+bin/sdl-test: tests/sdl-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $< -lSDL
 
-bin/thread-test: thread-test.c
+bin/thread-test: tests/thread-test.c
 	i386-elf-redox-gcc -Os -static -o $@ $<
 
 bin/%: build/sysroot/usr/bin/%
