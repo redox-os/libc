@@ -480,16 +480,16 @@ diff -rupN libiconv/srclib/signal.in.h libiconv-redox/srclib/signal.in.h
 diff -rupN libiconv/srclib/sigprocmask.c libiconv-redox/srclib/sigprocmask.c
 --- libiconv/srclib/sigprocmask.c	2011-08-07 06:42:06.000000000 -0700
 +++ libiconv-redox/srclib/sigprocmask.c	2016-07-27 18:08:40.327126884 -0700
-@@ -82,7 +82,7 @@ ext_signal (int sig, handler_t handler)
+@@ -82,7 +82,8 @@ ext_signal (int sig, handler_t handler)
  }
  # define signal ext_signal
  #endif
--
+
 +/*
  int
  sigismember (const sigset_t *set, int sig)
  {
-@@ -153,6 +153,7 @@ sigfillset (sigset_t *set)
+@@ -153,6 +154,7 @@ sigfillset (sigset_t *set)
    *set = ((2U << (NSIG - 1)) - 1) & ~ SIGABRT_COMPAT_MASK;
    return 0;
  }
