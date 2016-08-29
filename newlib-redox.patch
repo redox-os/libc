@@ -1,6 +1,6 @@
-diff -rupNZ newlib/config.sub newlib-redox/config.sub
+diff -rup newlib/config.sub newlib-redox/config.sub
 --- newlib/config.sub	2015-08-24 10:09:16.000000000 -0700
-+++ newlib-redox/config.sub	2016-07-27 10:24:29.683667766 -0700
++++ newlib-redox/config.sub	2016-08-28 19:26:11.452126858 -0700
 @@ -1385,7 +1385,7 @@ case $os in
  	      | -chorusos* | -chorusrdb* | -cegcc* \
  	      | -cygwin* | -msys* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
@@ -10,9 +10,9 @@ diff -rupNZ newlib/config.sub newlib-redox/config.sub
  	      | -uxpv* | -beos* | -mpeix* | -udk* | -moxiebox* \
  	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
  	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
-diff -rupNZ newlib/newlib/configure.host newlib-redox/newlib/configure.host
+diff -rup newlib/newlib/configure.host newlib-redox/newlib/configure.host
 --- newlib/newlib/configure.host	2015-08-24 10:09:16.000000000 -0700
-+++ newlib-redox/newlib/configure.host	2016-07-27 10:24:29.683667766 -0700
++++ newlib-redox/newlib/configure.host	2016-08-28 19:26:11.455460290 -0700
 @@ -448,6 +448,14 @@ case "${host}" in
  	sys_dir=rdos
  	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
@@ -28,9 +28,9 @@ diff -rupNZ newlib/newlib/configure.host newlib-redox/newlib/configure.host
    i[34567]86-*-sco*)
  	sys_dir=sysvi386
  	unix_dir=unix
-diff -rupNZ newlib/newlib/libc/include/sys/config.h newlib-redox/newlib/libc/include/sys/config.h
+diff -rup newlib/newlib/libc/include/sys/config.h newlib-redox/newlib/libc/include/sys/config.h
 --- newlib/newlib/libc/include/sys/config.h	2015-08-24 10:09:16.000000000 -0700
-+++ newlib-redox/newlib/libc/include/sys/config.h	2016-07-27 10:24:29.687001123 -0700
++++ newlib-redox/newlib/libc/include/sys/config.h	2016-08-28 19:26:11.455460290 -0700
 @@ -94,9 +94,9 @@
  #define HAVE_GETDATE
  #define _HAVE_SYSTYPES
@@ -43,9 +43,28 @@ diff -rupNZ newlib/newlib/libc/include/sys/config.h newlib-redox/newlib/libc/inc
  #endif
  #endif
  
-diff -rupNZ newlib/newlib/libc/sys/configure.in newlib-redox/newlib/libc/sys/configure.in
+diff -rup newlib/newlib/libc/posix/glob.c newlib-redox/newlib/libc/posix/glob.c
+--- newlib/newlib/libc/posix/glob.c	2015-08-24 10:09:16.000000000 -0700
++++ newlib-redox/newlib/libc/posix/glob.c	2016-08-28 19:29:49.895006249 -0700
+@@ -380,14 +380,11 @@ globtilde(pattern, patbuf, patbuf_len, p
+ 		 */
+ 		if (
+ #ifndef	__NETBSD_SYSCALLS
+-		    issetugid() != 0 ||
+ #endif
+ 		    (h = getenv("HOME")) == NULL) {
+ /* If we are not EL/IX level 4, we cannot use getpwxxx interfaces */
+ #if !defined(_ELIX_LEVEL) || _ELIX_LEVEL >= 4
+-			if (((h = getlogin()) != NULL &&
+-			     (pwd = getpwnam(h)) != NULL) ||
+-			    (pwd = getpwuid(getuid())) != NULL)
++			if ((pwd = getpwuid(getuid())) != NULL)
+ 				h = pwd->pw_dir;
+ 			else
+ #endif /* !_ELIX_LEVEL || _ELIX_LEVEL >= 4 */
+diff -rup newlib/newlib/libc/sys/configure.in newlib-redox/newlib/libc/sys/configure.in
 --- newlib/newlib/libc/sys/configure.in	2015-08-24 10:09:16.000000000 -0700
-+++ newlib-redox/newlib/libc/sys/configure.in	2016-07-27 10:24:29.687001123 -0700
++++ newlib-redox/newlib/libc/sys/configure.in	2016-08-28 19:26:11.458793722 -0700
 @@ -36,6 +36,7 @@ if test -n "${sys_dir}"; then
  	netware) AC_CONFIG_SUBDIRS(netware) ;;
  	or1k) AC_CONFIG_SUBDIRS(or1k) ;;
