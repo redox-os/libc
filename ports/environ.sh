@@ -6,7 +6,7 @@ name="$(basename "$0" .sh)"
 HOST="i386-elf-redox"
 BUILD="$(dirname "${PWD}")/build"
 PREFIX="${BUILD}/sysroot/usr"
-export PATH="${BUILD}/prefix/bin:${PREFIX}/bin:$PATH"
+export PATH="${BUILD}/prefix/bin:$PATH"
 export PKG_CONFIG_LIBDIR="${PREFIX}/lib/pkgconfig/"
 export AR="${HOST}-ar"
 export AS="${HOST}-as"
@@ -71,6 +71,12 @@ function fetch_template {
                 then
                     pushd "${BUILD}"
                     git clone --recursive "${GIT}"
+                    popd
+                else
+                    pushd "${BUILD}/${DIR}"
+                    git clean -fd
+                    git reset --hard
+                    git pull
                     popd
                 fi
             fi

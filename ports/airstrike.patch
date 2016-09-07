@@ -10,14 +10,3 @@ diff -rupN airstrike/src/Makefile airstrike-redox/src/Makefile
  
  airstrike-sound: $(OBJECTS)
  	$(CC) -o $@ $(CFLAGS) $(OBJECTS) `sdl-config --libs` -lSDL_image -lSDL_mixer
-@@ -17,8 +17,8 @@ airstrike-sound: $(OBJECTS)
- clean:
- 	rm -f `find . -name '*.[od]' -or -name '*~' -or -name '*.bb' -or -name '*.bbg'`
- 
--dryclean: 
--	rm -f `find . -name '*.[^ch]' -type f` 
-+dryclean:
-+	rm -f `find . -name '*.[^ch]' -type f`
- 
- #Automatic dependency handling. This is not needed for a simple compile.
- 
