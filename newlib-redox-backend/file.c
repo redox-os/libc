@@ -1,7 +1,7 @@
 #include "common.h"
 
 int chdir(const char *path){
-    return syscall1(SYS_CHDIR, (uint)path);
+    return syscall2(SYS_CHDIR, (uint)path, (uint)strlen(path));
 }
 
 int close(int file){
@@ -32,21 +32,12 @@ int lseek(int file, int ptr, int dir) {
     return syscall3(SYS_LSEEK, (uint)file, (uint)ptr, (uint)dir);
 }
 
-//TODO: Actually implement lstat, it currently just calls stat
-int lstat(const char *__restrict path, struct stat *__restrict sbuf) {
-    return syscall2(SYS_STAT, (uint)path, (uint)sbuf);
-}
-
-int link(const char *old, const char *new) {
-    return syscall2(SYS_LINK, (uint)old, (uint)new);
-}
-
 int mkdir(const char * path, mode_t mode) {
-    return syscall2(SYS_MKDIR, (uint)path, (uint)mode);
+    return syscall3(SYS_MKDIR, (uint)path, (uint)strlen(path), (uint)mode);
 }
 
-int open(const char *file, int flags, ...) {
-    return syscall3(SYS_OPEN, (uint)file, (uint)flags, 0);
+int open(const char *path, int flags, ...) {
+    return syscall3(SYS_OPEN, (uint)path, (uint)strlen(path), (uint)flags);
 }
 
 int pipe(int pipefd[2]) {
@@ -62,15 +53,15 @@ int read(int file, char *ptr, int len) {
 }
 
 int rmdir(const char * path){
-    return syscall1(SYS_RMDIR, (uint)path);
+    return syscall2(SYS_RMDIR, (uint)path, (uint)strlen(path));
 }
 
 int stat(const char *__restrict path, struct stat *__restrict sbuf) {
-    return syscall2(SYS_STAT, (uint)path, (uint)sbuf);
+    return syscall3(SYS_STAT, (uint)path, (uint)strlen(path), (uint)sbuf);
 }
 
-int unlink(const char *name) {
-    return syscall1(SYS_UNLINK, (uint)name);
+int unlink(const char *path) {
+    return syscall2(SYS_UNLINK, (uint)path, (uint)strlen(path));
 }
 
 int write(int file, const char *ptr, int len) {

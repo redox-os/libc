@@ -83,6 +83,15 @@ int kill(int pid, int sig) {
     UNIMPL(EINVAL);
 }
 
+//TODO: Actually implement lstat, it currently just calls stat
+int lstat(const char *__restrict path, struct stat *__restrict sbuf) {
+    return stat(path, sbuf);
+}
+
+int link(const char *old, const char *new) {
+    UNIMPL(EPERM);
+}
+
 int setgid(gid_t gid) {
     UNIMPL(EINVAL);
 }

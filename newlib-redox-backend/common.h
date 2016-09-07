@@ -6,6 +6,7 @@
 #include <sys/errno.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <errno.h>
 #undef errno
