@@ -5,6 +5,8 @@ mkdir -p build
 
 cd build
 
+TARGET=x86_64-elf-redox
+
 PREFIX="${PWD}/prefix"
 mkdir -p "${PREFIX}"
 mkdir -p "${PREFIX}/bin"
@@ -34,7 +36,7 @@ function binutils {
     rm -rf "build-${BINUTILS}"
     mkdir "build-${BINUTILS}"
     pushd "build-${BINUTILS}"
-        "../${BINUTILS}/configure" --target=i386-elf-redox --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --disable-werror
+        "../${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --disable-werror
         make -j `nproc`
         make -j `nproc` install
     popd
@@ -64,7 +66,7 @@ function gcc_freestanding {
     rm -rf "build-freestanding-${GCC}"
     mkdir "build-freestanding-${GCC}"
     pushd "build-freestanding-${GCC}"
-        "../${GCC}/configure" --target=i386-elf-redox --prefix="${PREFIX}" --disable-nls --enable-languages=c,c++ --without-headers
+        "../${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --disable-nls --enable-languages=c,c++ --without-headers
         make -j `nproc` all-gcc
         make -j `nproc` all-target-libgcc
         make -j `nproc` install-gcc
@@ -102,13 +104,13 @@ function newlib {
     rm -rf "build-${NEWLIB}"
     mkdir "build-${NEWLIB}"
     pushd "build-${NEWLIB}"
-        "../${NEWLIB}/configure" --target=i386-elf-redox --prefix="${PREFIX}"
+        "../${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}"
         make -j `nproc` all
         make -j `nproc` install
     popd
 
     mkdir -p "${SYSROOT}/usr"
-    cp -r "${PREFIX}/i386-elf-redox/include" "${SYSROOT}/usr"
+    cp -r "${PREFIX}/${TARGET}/include" "${SYSROOT}/usr"
 }
 
 ######################GCC############################
@@ -118,13 +120,13 @@ function gcc_complete {
     rm -rf "build-${GCC}"
     mkdir "build-${GCC}"
     pushd "build-${GCC}"
-        "../${GCC}/configure" --target=i386-elf-redox --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --enable-languages=c,c++
+        "../${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --enable-languages=c,c++
         make -j `nproc` all-gcc
         make -j `nproc` all-target-libgcc
         make -j `nproc` install-gcc
         make -j `nproc` install-target-libgcc
-        make -j `nproc` all-target-libstdc++-v3
-        make -j `nproc` install-target-libstdc++-v3
+        #make -j `nproc` all-target-libstdc++-v3
+        #make -j `nproc` install-target-libstdc++-v3
     popd
 }
 
