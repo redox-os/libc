@@ -12,17 +12,17 @@
 #undef errno
 extern int errno;
 
-#define SYS_CLASS       0xF000_0000
-#define SYS_CLASS_PATH  0x1000_0000
-#define SYS_CLASS_FILE  0x2000_0000
+#define SYS_CLASS       0xF0000000
+#define SYS_CLASS_PATH  0x10000000
+#define SYS_CLASS_FILE  0x20000000
 
-#define SYS_ARG         0x0F00_0000
-#define SYS_ARG_SLICE   0x0100_0000
-#define SYS_ARG_MSLICE  0x0200_0000
-#define SYS_ARG_PATH    0x0300_0000
+#define SYS_ARG         0x0F000000
+#define SYS_ARG_SLICE   0x01000000
+#define SYS_ARG_MSLICE  0x02000000
+#define SYS_ARG_PATH    0x03000000
 
-#define SYS_RET         0x00F0_0000
-#define SYS_RET_FILE    0x0010_0000
+#define SYS_RET         0x00F00000
+#define SYS_RET_FILE    0x00100000
 
 #define SYS_LINK        SYS_CLASS_PATH | SYS_ARG_PATH | 9
 #define SYS_OPEN        SYS_CLASS_PATH | SYS_RET_FILE | 5
@@ -68,9 +68,9 @@ extern int errno;
 #define SYS_WAITPID     7
 #define SYS_YIELD       158
 
-int syscall0(uint a);
-int syscall1(uint a, uint b);
-int syscall2(uint a, uint b, uint c);
-int syscall3(uint a, uint b, uint c, uint d);
-int syscall4(uint a, uint b, uint c, uint d, uint e);
-int syscall5(uint a, uint b, uint c, uint d, uint e, uint f);
+int64_t syscall0(uint64_t a);
+int64_t syscall1(uint64_t a, uint64_t b);
+int64_t syscall2(uint64_t a, uint64_t b, uint64_t c);
+int64_t syscall3(uint64_t a, uint64_t b, uint64_t c, uint64_t d);
+int64_t syscall4(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e);
+int64_t syscall5(uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e, uint64_t f);

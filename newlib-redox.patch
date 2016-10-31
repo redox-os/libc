@@ -17,7 +17,7 @@ diff -rup newlib/newlib/configure.host newlib-redox/newlib/configure.host
  	sys_dir=rdos
  	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
  	;;
-+  i[3-7]86-*-redox*)
++  i[3-7]86-*-redox*|x86_64-*-redox*)
 +	sys_dir=redox
 +	posix_dir=posix
 +	unix_dir=unix
@@ -42,7 +42,7 @@ diff -rup newlib/newlib/libc/include/sys/config.h newlib-redox/newlib/libc/inclu
 +//#define _LARGEFILE64_SOURCE 1
  #endif
  #endif
- 
+
 diff -rup newlib/newlib/libc/posix/glob.c newlib-redox/newlib/libc/posix/glob.c
 --- newlib/newlib/libc/posix/glob.c	2015-08-24 10:09:16.000000000 -0700
 +++ newlib-redox/newlib/libc/posix/glob.c	2016-08-28 19:29:49.895006249 -0700

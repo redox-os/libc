@@ -92,3 +92,7 @@ mode_t umask(mode_t mask) {
 int utime(const char * filename, const struct utimbuf * times) {
     UNIMPL(EACCES);
 }
+
+int vfork() {
+    return fork();
+}

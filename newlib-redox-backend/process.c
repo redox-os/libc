@@ -1,15 +1,11 @@
 #include "common.h"
 
-int clone() {
-    return syscall1(SYS_CLONE, CLONE_VM | CLONE_FS | CLONE_FILES);
-}
-
 void _exit(int code){
-    syscall1(SYS_EXIT, (uint)code);
+    syscall1(SYS_EXIT, (uint64_t)code);
 }
 
 int _execve(const char *name, const char **argv, const char **env) {
-    return syscall3(SYS_EXECVE, (uint)name, (uint)argv, (uint)env);
+    return syscall3(SYS_EXECVE, (uint64_t)name, (uint64_t)argv, (uint64_t)env);
 }
 
 int fork() {
@@ -67,7 +63,7 @@ uid_t getuid() {
 
 void * sbrk(ptrdiff_t increment){
     char * curr_brk = (char *)syscall1(SYS_BRK, 0);
-    char * new_brk = (char *)syscall1(SYS_BRK, (uint)(curr_brk + increment));
+    char * new_brk = (char *)syscall1(SYS_BRK, (uint64_t)(curr_brk + increment));
     if (new_brk != curr_brk + increment){
         return (void *) -1;
     }
@@ -103,14 +99,10 @@ int setuid(uid_t uid) {
     return syscall1(SYS_SETUID, uid);
 }
 
-pid_t vfork() {
-    return syscall1(SYS_CLONE, CLONE_VM | CLONE_VFORK);
-}
-
 pid_t wait(int * status) {
     return waitpid(-1, status, 0);
 }
 
 pid_t waitpid(pid_t pid, int * status, int options) {
-    return syscall3(SYS_WAITPID, (uint)pid, (uint)status, (uint)options);
+    return syscall3(SYS_WAITPID, (uint64_t)pid, (uint64_t)status, (uint64_t)options);
 }

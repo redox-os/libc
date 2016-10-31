@@ -1,7 +1,7 @@
 #include "common.h"
 
 int clock_gettime(clockid_t clk_id, struct timespec * tp){
-    return syscall2(SYS_CLOCK_GETTIME, (uint)clk_id, (uint)tp);
+    return syscall2(SYS_CLOCK_GETTIME, (uint64_t)clk_id, (uint64_t)tp);
 }
 
 int gettimeofday(struct timeval *__restrict tv, void *__restrict tz){
@@ -20,5 +20,5 @@ int gettimeofday(struct timeval *__restrict tv, void *__restrict tz){
 }
 
 int nanosleep(const struct timespec * req, struct timespec * rem){
-    return syscall2(SYS_NANOSLEEP, (uint)req, (uint)rem);
+    return syscall2(SYS_NANOSLEEP, (uint64_t)req, (uint64_t)rem);
 }
