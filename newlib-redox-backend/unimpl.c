@@ -59,22 +59,6 @@ struct passwd * getpwuid(uid_t uid){
     return (struct passwd *) NULL;
 }
 
-gid_t getegid() {
-    return 0;
-}
-
-uid_t geteuid() {
-    return 0;
-}
-
-gid_t getgid() {
-    return 0;
-}
-
-uid_t getuid() {
-    return 0;
-}
-
 int ioctl(int file, int request, ...) {
     UNIMPL(EINVAL);
 }
@@ -90,14 +74,6 @@ int lstat(const char *__restrict path, struct stat *__restrict sbuf) {
 
 int link(const char *old, const char *new) {
     UNIMPL(EPERM);
-}
-
-int setgid(gid_t gid) {
-    UNIMPL(EINVAL);
-}
-
-int setuid(uid_t uid) {
-    UNIMPL(EINVAL);
 }
 
 long sysconf(int name) {

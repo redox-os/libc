@@ -19,7 +19,7 @@ int fork() {
 char * getcwd(char * buf, size_t size) {
     char * cwd = NULL;
 
-    int file = open("", O_RDONLY);
+    int file = open(".", 0);
     if(file >= 0){
         if(!buf){
             if(size == 0){
@@ -47,6 +47,22 @@ char * getcwd(char * buf, size_t size) {
 
 pid_t getpid() {
     return syscall0(SYS_GETPID);
+}
+
+gid_t getegid() {
+    return syscall0(SYS_GETEGID);
+}
+
+uid_t geteuid() {
+    return syscall0(SYS_GETEUID);
+}
+
+gid_t getgid() {
+    return syscall0(SYS_GETGID);
+}
+
+uid_t getuid() {
+    return syscall0(SYS_GETUID);
 }
 
 void * sbrk(ptrdiff_t increment){
@@ -77,6 +93,14 @@ int _system(char * s){
         }
         return status;
     }
+}
+
+int setgid(gid_t gid) {
+    return syscall1(SYS_SETGID, gid);
+}
+
+int setuid(uid_t uid) {
+    return syscall1(SYS_SETUID, uid);
 }
 
 pid_t vfork() {

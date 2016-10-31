@@ -3,7 +3,7 @@ set -e
 
 name="$(basename "$0" .sh)"
 
-HOST="i386-elf-redox"
+HOST="x86_64-elf-redox"
 BUILD="$(dirname "${PWD}")/build"
 PREFIX="${BUILD}/sysroot/usr"
 export PATH="${BUILD}/prefix/bin:$PATH"
