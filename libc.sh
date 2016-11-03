@@ -1,42 +1,34 @@
 #!/bin/bash
 set -e
 
-mkdir -p build
-
-cd build
-
 TARGET=x86_64-elf-redox
 
-PREFIX="${PWD}/prefix"
+ROOT="${PWD}"
+
+BUILD="${ROOT}/build"
+mkdir -p "${BUILD}"
+cd "${BUILD}"
+
+PREFIX="${BUILD}/prefix"
 mkdir -p "${PREFIX}"
 mkdir -p "${PREFIX}/bin"
 export PATH="${PREFIX}/bin:$PATH"
 
-SYSROOT="${PWD}/sysroot"
+SYSROOT="${BUILD}/sysroot"
 mkdir -p "${SYSROOT}"
 
-mkdir -p cross
-
-cd cross
+CROSS="${BUILD}/cross"
+mkdir -p "${CROSS}"
+cd "${CROSS}"
 
 ###################BINUTILS#########################
 function binutils {
-    BINUTILS=binutils-2.24.90
+    BINUTILS="${ROOT}/binutils-gdb"
 
-    if [ ! -f "${BINUTILS}.tar.bz2" ]
-    then
-        curl "ftp://sourceware.org/pub/binutils/snapshots/${BINUTILS}.tar.bz2" -o "${BINUTILS}.tar.bz2"
-    fi
-
-    rm -rf "${BINUTILS}"
-    tar xf "${BINUTILS}.tar.bz2"
-
-    patch -p1 -d "${BINUTILS}" < ../../binutils-redox.patch
-
-    rm -rf "build-${BINUTILS}"
-    mkdir "build-${BINUTILS}"
-    pushd "build-${BINUTILS}"
-        "../${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --disable-werror
+    rm -rf "binutils"
+    mkdir "binutils"
+    pushd "binutils"
+        "${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --disable-werror
         make -j `nproc`
         make -j `nproc` install
     popd
@@ -44,29 +36,20 @@ function binutils {
 
 ##################GCC FREESTANDING##############################
 function gcc_freestanding {
-    GCC=gcc-4.6.4
+    GCC="${ROOT}/gcc"
 
-    if [ ! -f "${GCC}.tar.bz2" ]
-    then
-        curl "http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.bz2" -o "${GCC}.tar.bz2"
-    fi
-
-    rm -rf "${GCC}"
-    tar xf "${GCC}.tar.bz2"
     pushd "${GCC}"
         ./contrib/download_prerequisites
     popd
-
-    patch -p1 -d "${GCC}" < ../../gcc-redox.patch
 
     pushd "${GCC}/libstdc++-v3"
         autoconf2.64
     popd
 
-    rm -rf "build-freestanding-${GCC}"
-    mkdir "build-freestanding-${GCC}"
-    pushd "build-freestanding-${GCC}"
-        "../${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --disable-nls --enable-languages=c,c++ --without-headers
+    rm -rf "gcc-freestanding"
+    mkdir "gcc-freestanding"
+    pushd "gcc-freestanding"
+        "${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --disable-nls --enable-languages=c,c++ --without-headers
         make -j `nproc` all-gcc
         make -j `nproc` all-target-libgcc
         make -j `nproc` install-gcc
@@ -76,18 +59,7 @@ function gcc_freestanding {
 
 ##################NEWLIB###########################
 function newlib {
-    NEWLIB=newlib-2.2.0.20150824
-
-    if [ ! -f "${NEWLIB}.tar.gz" ]
-    then
-        curl "ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz" -o "${NEWLIB}.tar.gz"
-    fi
-
-    rm -rf ${NEWLIB}
-    tar xf "${NEWLIB}.tar.gz"
-
-    patch -p1 -d "${NEWLIB}" < ../../newlib-redox.patch
-    cp -r ../../newlib-redox-backend "${NEWLIB}/newlib/libc/sys/redox"
+    NEWLIB="${NEWLIB}"
 
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..
@@ -101,10 +73,10 @@ function newlib {
         automake-1.11 --cygnus Makefile
     popd
 
-    rm -rf "build-${NEWLIB}"
-    mkdir "build-${NEWLIB}"
-    pushd "build-${NEWLIB}"
-        "../${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}"
+    rm -rf "newlib"
+    mkdir "newlib"
+    pushd "newlib"
+        "${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}"
         make -j `nproc` all
         make -j `nproc` install
     popd
@@ -115,12 +87,12 @@ function newlib {
 
 ######################GCC############################
 function gcc_complete {
-    GCC=gcc-4.6.4
+    GCC="${ROOT}/gcc"
 
-    rm -rf "build-${GCC}"
-    mkdir "build-${GCC}"
-    pushd "build-${GCC}"
-        "../${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --enable-languages=c,c++
+    rm -rf "gcc"
+    mkdir "gcc"
+    pushd "gcc"
+        "${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --enable-languages=c,c++
         make -j `nproc` all-gcc
         make -j `nproc` all-target-libgcc
         make -j `nproc` install-gcc
