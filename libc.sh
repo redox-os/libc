@@ -59,7 +59,7 @@ function gcc_freestanding {
 
 ##################NEWLIB###########################
 function newlib {
-    NEWLIB="${NEWLIB}"
+    NEWLIB="${ROOT}/newlib"
 
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..
