@@ -1,0 +1,9 @@
+[submodule "binutils-gdb"]
+	path = binutils-gdb
+	url = https://github.com/redox-os/binutils-gdb.git
+[submodule "newlib"]
+	path = newlib
+	url = https://github.com/redox-os/newlib.git
+[submodule "gcc"]
+	path = gcc
+	url = https://github.com/redox-os/gcc.git
