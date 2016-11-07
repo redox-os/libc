@@ -1,9 +1,10 @@
 sudo: required
 os:
   - linux
+dist: trusty
 install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq autoconf2.64 automake1.11 gcc-4.6-multilib libtool texinfo gperf bison flex
+  - sudo apt-get install -qq autoconf2.64 automake1.11 gcc-multilib libtool texinfo gperf bison flex
 script:
   - ./libc.sh >/dev/null
 notifications:
