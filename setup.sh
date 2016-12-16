@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-TARGET=x86_64-elf-redox
+ARCH=x86_64
+TARGET="${ARCH}-elf-redox"
+RUST_TARGET="${ARCH}-unknown-redox"
 
 ROOT="${PWD}"
 
@@ -102,6 +104,42 @@ function gcc_complete {
     popd
 }
 
+######################OpenLIBM############################
+function openlibm {
+    OPENLIBM="${ROOT}/openlibm"
+    CC="${TARGET}-gcc" CFLAGS=-fno-stack-protector make -C "${OPENLIBM}" libopenlibm.a
+    cp -v "${OPENLIBM}/libopenlibm.a" "${PREFIX}/lib"
+}
+
+######################RUST############################
+function rust {
+    RUST="${ROOT}/rust"
+
+    rm -rf "rust"
+    mkdir "rust"
+    pushd "rust"
+cat > config.toml <<-EOF
+        [build]
+        target = ["x86_64-unknown-redox"]
+        [rust]
+        codegen-units = 0
+        use-jemalloc = false
+EOF
+        "${RUST}/x.py" build -j `nproc` --stage 1
+        "${RUST}/x.py" dist -j `nproc` --keep-stage 1
+        build/tmp/dist/rustc-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
+        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
+        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}" --verbose
+    popd "rust"
+}
+
+#####################RUST CRATES##########################
+function rust_crates {
+    OUT_DIR="${PREFIX}/lib/rustlib/x86_64-unknown-redox/lib"
+    rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name syscall "${ROOT}/syscall/src/lib.rs" --out-dir "${OUT_DIR}"
+    rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name ralloc --cfg 'feature="allocator"' "${ROOT}/ralloc/src/lib.rs" --out-dir "${OUT_DIR}"
+}
+
 case $1 in
     binutils)
         binutils
@@ -115,10 +153,25 @@ case $1 in
     gcc_complete)
         gcc_complete
         ;;
-    *)
+    openlibm)
+        openlibm
+        ;;
+    rust)
+        rust
+        ;;
+    rust_crates)
+        rust_crates
+        ;;
+    all)
         binutils
         gcc_freestanding
         newlib
         gcc_complete
+        openlibm
+        rust
+        rust_crates
+        ;;
+    *)
+        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, openlibm, rust, rust_crates, all]"
         ;;
 esac
