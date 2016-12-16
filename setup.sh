@@ -108,7 +108,8 @@ function gcc_complete {
 function openlibm {
     OPENLIBM="${ROOT}/openlibm"
     CC="${TARGET}-gcc" CFLAGS=-fno-stack-protector make -C "${OPENLIBM}" libopenlibm.a
-    cp -v "${OPENLIBM}/libopenlibm.a" "${PREFIX}/lib"
+    mkdir -p "${SYSROOT}/usr/lib"
+    cp -v "${OPENLIBM}/libopenlibm.a" "${SYSROOT}/usr/lib"
 }
 
 ######################RUST############################
@@ -120,7 +121,7 @@ function rust {
     pushd "rust"
 cat > config.toml <<-EOF
         [build]
-        target = ["x86_64-unknown-redox"]
+        target = ["${RUST_TARGET}"]
         [rust]
         codegen-units = 0
         use-jemalloc = false
@@ -130,7 +131,7 @@ EOF
         build/tmp/dist/rustc-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
         build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
         build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}" --verbose
-    popd "rust"
+    popd
 }
 
 #####################RUST CRATES##########################
@@ -138,6 +139,19 @@ function rust_crates {
     OUT_DIR="${PREFIX}/lib/rustlib/x86_64-unknown-redox/lib"
     rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name syscall "${ROOT}/syscall/src/lib.rs" --out-dir "${OUT_DIR}"
     rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name ralloc --cfg 'feature="allocator"' "${ROOT}/ralloc/src/lib.rs" --out-dir "${OUT_DIR}"
+}
+
+######################Cargo###########################
+function cargo {
+    CARGO="${ROOT}/cargo"
+
+    rm -rf "cargo"
+    mkdir "cargo"
+    pushd "cargo"
+        "${CARGO}/configure" --prefix="${PREFIX}"
+        make -j `nproc`
+        make install -j `nproc`
+    popd
 }
 
 case $1 in
@@ -162,6 +176,9 @@ case $1 in
     rust_crates)
         rust_crates
         ;;
+    cargo)
+        cargo
+        ;;
     all)
         binutils
         gcc_freestanding
@@ -170,8 +187,9 @@ case $1 in
         openlibm
         rust
         rust_crates
+        cargo
         ;;
     *)
-        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, openlibm, rust, rust_crates, all]"
+        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, openlibm, rust, rust_crates, cargo, all]"
         ;;
 esac
