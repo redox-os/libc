@@ -3,7 +3,9 @@ set -e
 
 name="$(basename "$0" .sh)"
 
-HOST="x86_64-elf-redox"
+ARCH="x86_64"
+HOST="${ARCH}-elf-redox"
+RUST_HOST="${ARCH}-unknown-redox"
 BUILD="$(dirname "${PWD}")/build"
 PREFIX="${BUILD}/sysroot/usr"
 export PATH="${BUILD}/prefix/bin:$PATH"
@@ -98,7 +100,6 @@ function fetch_template {
     esac
 }
 
-
 function make_template {
     case $1 in
         build)
@@ -121,6 +122,53 @@ function make_template {
         remove)
             make_template uninstall || true
             make_template clean || true
+            fetch_template remove
+            ;;
+        *)
+            fetch_template $*
+            ;;
+    esac
+}
+
+function cargo_template {
+    case $1 in
+        build)
+            pushd "${BUILD}/${DIR}/${MAKE_DIR}"
+            which rustc
+            cargo build --target="${RUST_HOST}" --release --verbose $CARGO_ARGS
+            popd
+            ;;
+        install)
+            if [ -n "${CARGO_BINS}" ]
+            then
+                for bin in "${CARGO_BINS}"
+                do
+                    cp -v "${BUILD}/${DIR}/${MAKE_DIR}/target/${RUST_HOST}/release/$bin" "${PREFIX}/bin"
+                done
+            fi
+            ;;
+        add)
+            fetch_template add
+            cargo_template build
+            cargo_template install
+            ;;
+        clean)
+            pushd "${BUILD}/${DIR}/${MAKE_DIR}"
+            cargo clean
+            popd
+            ;;
+        uninstall)
+            if [ -n "${CARGO_BINS}" ]
+            then
+                for bin in "${CARGO_BINS}"
+                do
+                    rm -v "${PREFIX}/bin/$bin"
+                done
+            fi
+            ;;
+        remove)
+            cargo_template uninstall || true
+            cargo_template clean || true
             fetch_template remove
             ;;
         *)

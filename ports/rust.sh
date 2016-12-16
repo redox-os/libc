@@ -6,5 +6,5 @@ BROKEN
 GIT=https://github.com/rust-lang/rust.git
 DIR=rust
 
-CONFIGURE_ARGS="--host=${TARGET} --prefix=$PREFIX"
+CONFIGURE_ARGS="--host=${HOST} --prefix=$PREFIX"
 configure_template $*

@@ -104,14 +104,6 @@ function gcc_complete {
     popd
 }
 
-######################OpenLIBM############################
-function openlibm {
-    OPENLIBM="${ROOT}/openlibm"
-    CC="${TARGET}-gcc" CFLAGS=-fno-stack-protector make -C "${OPENLIBM}" libopenlibm.a
-    mkdir -p "${SYSROOT}/usr/lib"
-    cp -v "${OPENLIBM}/libopenlibm.a" "${SYSROOT}/usr/lib"
-}
-
 ######################RUST############################
 function rust {
     RUST="${ROOT}/rust"
@@ -132,6 +124,13 @@ EOF
         build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
         build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}" --verbose
     popd
+}
+
+######################OpenLIBM############################
+function openlibm {
+    OUT_DIR="${PREFIX}/lib/rustlib/x86_64-unknown-redox/lib"
+    CC="${TARGET}-gcc" CFLAGS=-fno-stack-protector make -C "${ROOT}/openlibm" libopenlibm.a
+    cp -v "${ROOT}/openlibm/libopenlibm.a" "${OUT_DIR}"
 }
 
 #####################RUST CRATES##########################
@@ -167,11 +166,11 @@ case $1 in
     gcc_complete)
         gcc_complete
         ;;
-    openlibm)
-        openlibm
-        ;;
     rust)
         rust
+        ;;
+    openlibm)
+        openlibm
         ;;
     rust_crates)
         rust_crates
@@ -184,12 +183,12 @@ case $1 in
         gcc_freestanding
         newlib
         gcc_complete
-        openlibm
         rust
+        openlibm
         rust_crates
         cargo
         ;;
     *)
-        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, openlibm, rust, rust_crates, cargo, all]"
+        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, openlibm, rust_crates, cargo, all]"
         ;;
 esac
