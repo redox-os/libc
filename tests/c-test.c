@@ -14,14 +14,16 @@ int main(int argc, char ** argv){
     struct timespec tp;
     if(clock_gettime(CLOCK_REALTIME, &tp) == 0){
         printf("clock_gettime %d %d\n", (int)tp.tv_sec, (int)tp.tv_nsec);
+        printf("ctime %s", ctime(&tp.tv_sec));
         void* test = malloc(1024*1024);
         if(test > 0){
-            printf("Malloc %x\n", test);
+            printf("Malloc %p\n", test);
             free(test);
             printf("Free\n");
 
             DIR * dir = opendir("/home/");
             if (dir != NULL) {
+                printf("opendir %p\n", dir);
                 struct dirent * ent;
                 while ((ent = readdir(dir)) != NULL) {
                     printf("%s\n", ent->d_name);

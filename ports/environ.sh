@@ -12,6 +12,7 @@ export AR="${HOST}-ar"
 export AS="${HOST}-as"
 export CC="${HOST}-gcc"
 export CXX="${HOST}-g++"
+export CONFIGURE=./configure
 export LD="${HOST}-ld"
 export NM="${HOST}-nm"
 export OBJCOPY="${HOST}-objcopy"
@@ -132,7 +133,7 @@ function configure_template {
     case $1 in
         configure)
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
-            ./configure --prefix="${PREFIX}" $CONFIGURE_ARGS
+            ${CONFIGURE} --prefix="${PREFIX}" $CONFIGURE_ARGS
             popd
             ;;
         add)
