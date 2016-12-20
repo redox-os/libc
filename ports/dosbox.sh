@@ -7,5 +7,5 @@ SRC=http://downloads.sourceforge.net/project/dosbox/dosbox/0.74/dosbox-0.74.tar.
 DIR=dosbox-0.74
 
 export CXXFLAGS="-Os -static"
-CONFIGURE_ARGS="--host=${HOST} --prefix=${PREFIX} --with-sdl-prefix=${PREFIX} --disable-opengl --disable-sdltest"
+CONFIGURE_ARGS="--host=${HOST} --with-sdl-prefix=${PREFIX} --disable-opengl --disable-sdltest"
 configure_template $*

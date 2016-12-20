@@ -6,7 +6,7 @@ BROKEN
 SRC=http://ftp.gnu.org/gnu/gcc/gcc-4.6.4/gcc-4.6.4.tar.bz2
 DIR=gcc-4.6.4
 
-CONFIGURE_ARGS="--host=i386-redox-gnu --prefix=$PREFIX"
+CONFIGURE_ARGS="--host=${HOST}"
 
 case $1 in
     add)

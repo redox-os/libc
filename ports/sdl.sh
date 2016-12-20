@@ -1,10 +1,10 @@
 #!/bin/bash
 source environ.sh
 
-BROKEN
+SRC=https://www.libsdl.org/release/SDL-1.2.15.tar.gz
+DIR=SDL-1.2.15
 
-SRC=http://ftp.gnome.org/pub/gnome/sources/gtk+/3.19/gtk+-3.19.1.tar.xz
-DIR=gtk+-3.19.1
-
-CONFIGURE_ARGS="--host=${HOST} --prefix=$PREFIX"
-configure_template $*
+CONFIGURE_ARGS="--host=${HOST} --disable-shared --disable-pulseaudio --disable-video-x11 \
+    --disable-cdrom --disable-loadso --disable-threads --disable-timers \
+    --enable-audio --enable-dummyaudio --enable-video-orbital"
+autogen_template $*

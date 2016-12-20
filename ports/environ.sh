@@ -73,7 +73,12 @@ function fetch_template {
                 if [ ! -d "${BUILD}/${DIR}" ]
                 then
                     pushd "${BUILD}"
-                    git clone --recursive "${GIT}"
+                    if [ -n "${GIT_BRANCH}" ]
+                    then
+                        git clone --recursive "${GIT}" --branch "${GIT_BRANCH}"
+                    else
+                        git clone --recursive "${GIT}"
+                    fi
                     popd
                 else
                     pushd "${BUILD}/${DIR}"
