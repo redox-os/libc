@@ -2,6 +2,7 @@
 source environ.sh
 
 STABLE
+DEPENDS freetype
 
 SRC=https://www.libsdl.org/projects/SDL_ttf/release/SDL_ttf-2.0.11.tar.gz
 DIR=SDL_ttf-2.0.11
