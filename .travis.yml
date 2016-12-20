@@ -6,6 +6,6 @@ install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq autoconf2.64 automake1.11 gcc-multilib libtool texinfo gperf bison flex
 script:
-  - ./setup.sh >/dev/null
+  - ./setup.sh all >/dev/null
 notifications:
   email: false
