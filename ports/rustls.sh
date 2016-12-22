@@ -1,7 +1,7 @@
 #!/bin/bash
 source environ.sh
 
-BROKEN
+UNSTABLE
 
 GIT=https://github.com/redox-os/rustls.git
 DIR=rustls
