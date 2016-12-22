@@ -108,21 +108,14 @@ function gcc_complete {
 function rust {
     RUST="${ROOT}/rust"
 
-    rm -rf "rust"
-    mkdir "rust"
+    #rm -rf "rust"
+    #mkdir "rust"
     pushd "rust"
-cat > config.toml <<-EOF
-        [build]
-        target = ["${RUST_TARGET}"]
-        [rust]
-        codegen-units = 0
-        use-jemalloc = false
-EOF
-        "${RUST}/x.py" build -j `nproc` --stage 1
-        "${RUST}/x.py" dist -j `nproc` --keep-stage 1
-        build/tmp/dist/rustc-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
-        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-linux-gnu/install.sh --prefix="${PREFIX}" --verbose
-        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}" --verbose
+        "${RUST}/configure" --target=x86_64-unknown-redox --prefix="${PREFIX}" --disable-jemalloc --disable-manage-submodules
+        make -j `nproc`
+        make dist -j `nproc`
+        make install -j `nproc`
+        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}"
     popd
 }
 

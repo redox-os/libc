@@ -90,9 +90,18 @@ function fetch_template {
             fi
             ;;
         unfetch)
-            if [ -n "${SRC}" -a -f "${BUILD}/$(basename "${SRC}")" ]
+            if [ -n "${SRC}" ]
             then
-                rm -fv "${BUILD}/$(basename "${SRC}")"
+                if [ -f "${BUILD}/$(basename "${SRC}")" ]
+                then
+                    rm -fv "${BUILD}/$(basename "${SRC}")"
+                fi
+            elif [ -n "${GIT}" ]
+            then
+                if [ -d "${BUILD}/${DIR}" ]
+                then
+                    rm -rfv "${BUILD}/${DIR}"
+                fi
             fi
             ;;
         patch)
