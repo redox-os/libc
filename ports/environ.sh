@@ -146,6 +146,11 @@ function make_template {
 
 function cargo_template {
     case $1 in
+        update)
+            pushd "${BUILD}/${DIR}/${MAKE_DIR}"
+            cargo update
+            popd
+            ;;
         build)
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
             which rustc
@@ -155,7 +160,7 @@ function cargo_template {
         install)
             if [ -n "${CARGO_BINS}" ]
             then
-                for bin in "${CARGO_BINS}"
+                for bin in ${CARGO_BINS}
                 do
                     cp -v "${BUILD}/${DIR}/${MAKE_DIR}/target/${RUST_HOST}/release/$bin" "${PREFIX}/bin"
                 done
@@ -174,7 +179,7 @@ function cargo_template {
         uninstall)
             if [ -n "${CARGO_BINS}" ]
             then
-                for bin in "${CARGO_BINS}"
+                for bin in ${CARGO_BINS}
                 do
                     rm -v "${PREFIX}/bin/$bin"
                 done
