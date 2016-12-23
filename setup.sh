@@ -109,9 +109,9 @@ function rust {
     RUST="${ROOT}/rust"
 
     #rm -rf "rust"
-    #mkdir "rust"
+    mkdir -p "rust"
     pushd "rust"
-        "${RUST}/configure" --target=x86_64-unknown-redox --prefix="${PREFIX}" --disable-jemalloc --disable-manage-submodules
+        "${RUST}/configure" --target="${RUST_TARGET}" --prefix="${PREFIX}" --disable-jemalloc --disable-manage-submodules
         make -j `nproc`
         make dist -j `nproc`
         make install -j `nproc`
