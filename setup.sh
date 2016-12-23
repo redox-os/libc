@@ -111,33 +111,35 @@ function rust {
     #rm -rf "rust"
     mkdir -p "rust"
     pushd "rust"
-        "${RUST}/configure" --target="${RUST_TARGET}" --prefix="${PREFIX}" --disable-jemalloc --disable-manage-submodules
-        make -j `nproc`
-        make dist -j `nproc`
-        make install -j `nproc`
+cat > config.toml <<-EOF
+        [llvm]
+        ccache = true
+
+        [build]
+        target = ["${RUST_TARGET}"]
+        docs = false
+        submodules = false
+
+        [rust]
+        codegen-units = 0
+        codegen-tests = false
+        use-jemalloc = false
+
+        [target.${RUST_TARGET}]
+        cc = "${TARGET}-gcc"
+        cxx = "${TARGET}-g++"
+EOF
+        "${RUST}/x.py" build -j `nproc`
+        "${RUST}/x.py" dist -j `nproc`
+        "${RUST}/x.py" dist --install -j `nproc`
         build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}"
     popd
-}
-
-######################OpenLIBM############################
-function openlibm {
-    OUT_DIR="${PREFIX}/lib/rustlib/x86_64-unknown-redox/lib"
-    CC="${TARGET}-gcc" CFLAGS=-fno-stack-protector make -C "${ROOT}/openlibm" libopenlibm.a
-    cp -v "${ROOT}/openlibm/libopenlibm.a" "${OUT_DIR}"
-}
-
-#####################RUST CRATES##########################
-function rust_crates {
-    OUT_DIR="${PREFIX}/lib/rustlib/x86_64-unknown-redox/lib"
-    rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name syscall "${ROOT}/syscall/src/lib.rs" --out-dir "${OUT_DIR}"
-    rustc --target="${RUST_TARGET}" -C opt-level=2 -C debuginfo=0 --crate-type rlib --crate-name ralloc --cfg 'feature="allocator"' "${ROOT}/ralloc/src/lib.rs" --out-dir "${OUT_DIR}"
 }
 
 ######################Cargo###########################
 function cargo {
     CARGO="${ROOT}/cargo"
 
-    rm -rf "cargo"
     mkdir "cargo"
     pushd "cargo"
         "${CARGO}/configure" --prefix="${PREFIX}"
@@ -162,12 +164,6 @@ case $1 in
     rust)
         rust
         ;;
-    openlibm)
-        openlibm
-        ;;
-    rust_crates)
-        rust_crates
-        ;;
     cargo)
         cargo
         ;;
@@ -177,8 +173,6 @@ case $1 in
         newlib
         gcc_complete
         rust
-        openlibm
-        rust_crates
         cargo
         ;;
     *)

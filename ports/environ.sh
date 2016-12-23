@@ -154,7 +154,7 @@ function cargo_template {
         build)
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
             which rustc
-            cargo build --target="${RUST_HOST}" --release --verbose $CARGO_ARGS
+            cargo rustc --target="${RUST_HOST}" --release --verbose $CARGO_ARGS
             popd
             ;;
         install)
