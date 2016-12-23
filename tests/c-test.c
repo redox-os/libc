@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
                     if(waitpid(pid, &status, 0) >= 0){
                         printf("waitpid status %d\n", status);
                     }else{
-                        printf("waitpid failed\n");
+                        perror("waitpid failed\n");
                     }
                 }else if(pid == 0){
                     printf("Fork Child %d = %d\n", getpid(), pid);
@@ -52,13 +52,13 @@ int main(int argc, char ** argv){
                     printf("Fork Failed %d = %d\n", getpid(), pid);
                 }
             }else{
-                printf("Opendir Failed\n");
+                perror("Opendir Failed\n");
             }
         } else {
-            printf("Malloc Failed\n");
+            perror("Malloc Failed\n");
         }
     } else {
-        printf("clock_gettime Failed\n");
+        perror("clock_gettime Failed\n");
     }
     return 234;
 }
