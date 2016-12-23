@@ -135,7 +135,7 @@ EOF
         "${RUST}/x.py" build -j `nproc`
         "${RUST}/x.py" dist -j `nproc`
         "${RUST}/x.py" dist --install -j `nproc`
-        build/tmp/dist/rust-std-1.15.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}"
+        build/tmp/dist/rust-std-1.16.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}"
     popd
 }
 
