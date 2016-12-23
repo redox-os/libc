@@ -120,6 +120,9 @@ cat > config.toml <<-EOF
         docs = false
         submodules = false
 
+        [install]
+        prefix = "${PREFIX}"
+
         [rust]
         codegen-units = 0
         codegen-tests = false
