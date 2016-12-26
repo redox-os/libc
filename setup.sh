@@ -143,7 +143,8 @@ EOF
 function cargo {
     CARGO="${ROOT}/cargo"
 
-    mkdir "cargo"
+    #rm -rf "cargo"
+    mkdir -p "cargo"
     pushd "cargo"
         "${CARGO}/configure" --prefix="${PREFIX}"
         make -j `nproc`
@@ -179,6 +180,6 @@ case $1 in
         cargo
         ;;
     *)
-        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, openlibm, rust_crates, cargo, all]"
+        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, cargo, all]"
         ;;
 esac
