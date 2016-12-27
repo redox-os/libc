@@ -199,8 +199,9 @@ function cargo_template {
 function configure_template {
     case $1 in
         configure)
+            mkdir -p "${BUILD}/${DIR}/${MAKE_DIR}"
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
-            ${CONFIGURE} --prefix="${PREFIX}" $CONFIGURE_ARGS
+                ${CONFIGURE} --prefix="${PREFIX}" $CONFIGURE_ARGS
             popd
             ;;
         add)
@@ -226,6 +227,7 @@ function configure_template {
 function autoconf_template {
     case $1 in
         autoconf)
+            mkdir -p "${BUILD}/${DIR}/${MAKE_DIR}"
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
                 autoconf $AUTOCONF_ARGS
             popd

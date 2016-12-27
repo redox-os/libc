@@ -1,12 +1,12 @@
 diff -rupN gcc-4.6.4/config.sub gcc-4.6.4-redox/config.sub
---- gcc-4.6.4/config.sub	2010-05-25 07:22:07.000000000 -0600
-+++ gcc-4.6.4-redox/config.sub	2016-07-31 12:16:40.465959649 -0600
-@@ -1295,7 +1295,7 @@ case $os in
+--- gcc-4.6.4/config.sub	2013-10-01 10:50:56.000000000 -0600
++++ gcc-4.6.4-redox/config.sub	2016-12-27 08:06:31.618469904 -0700
+@@ -1354,7 +1354,7 @@ case $os in
  	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
  	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
  	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
--	      | -sym* | -kopensolaris* \
-+	      | -sym* | -kopensolaris* | -redox* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
  	      | -aos* | -aros* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
@@ -39,3 +39,33 @@ diff -rupN gcc-4.6.4/gcc/config.gcc gcc-4.6.4-redox/gcc/config.gcc
  i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
  	tm_file="i386/i386.h i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h openbsd-oldgas.h openbsd.h i386/openbsd.h"
  	extra_options="${extra_options} openbsd.opt"
+diff -rupN gcc-4.6.4/libstdc++-v3/crossconfig.m4 gcc-4.6.4-redox/libstdc++-v3/crossconfig.m4
+--- gcc-4.6.4/libstdc++-v3/crossconfig.m4	2014-03-20 12:57:07.000000000 -0600
++++ gcc-4.6.4-redox/libstdc++-v3/crossconfig.m4	2016-12-27 09:14:51.630455285 -0700
+@@ -204,6 +204,12 @@ case "${host}" in
+     GLIBCXX_CHECK_MATH_SUPPORT
+     GLIBCXX_CHECK_STDLIB_SUPPORT
+     ;;
++  *-redox*)
++    GLIBCXX_CHECK_COMPILER_FEATURES
++    GLIBCXX_CHECK_LINKER_FEATURES
++    GLIBCXX_CHECK_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
+   *-solaris*)
+     case "$target" in
+       *-solaris2.9 | *-solaris2.10)
+diff -rupN gcc-4.6.4/libgfortran/configure.ac gcc-4.6.4-redox/libgfortran/configure.ac
+--- gcc-4.6.4/libgfortran/configure.ac	2015-08-28 09:13:21.000000000 -0600
++++ gcc-4.6.4-redox/libgfortran/configure.ac	2016-12-27 09:37:44.840940898 -0700
+@@ -218,7 +218,9 @@ AC_PROG_INSTALL
+
+ # Configure libtool
+ #AC_MSG_NOTICE([====== Starting libtool configuration])
+-AC_LIBTOOL_DLOPEN
++if test "x${with_newlib}" != "xyes"; then
++  AC_LIBTOOL_DLOPEN
++fi
+ AM_PROG_LIBTOOL
+ ACX_LT_HOST_FLAGS
+ AC_SUBST(enable_shared)
