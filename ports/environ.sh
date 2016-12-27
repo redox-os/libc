@@ -66,7 +66,7 @@ function fetch_template {
                 fi
                 rm -rf "${BUILD}/${DIR}"
                 pushd "${BUILD}"
-                tar xf "$(basename "${SRC}")"
+                tar xvf "$(basename "${SRC}")"
                 popd
             elif [ -n "${GIT}" ]
             then

@@ -10,3 +10,32 @@ diff -rupN gcc-4.6.4/config.sub gcc-4.6.4-redox/config.sub
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
  	      | -aos* | -aros* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+diff -rupN gcc-4.6.4/libgcc/config.host gcc-4.6.4-redox/libgcc/config.host
+--- gcc-4.6.4/libgcc/config.host	2011-11-23 15:15:54.000000000 -0700
++++ gcc-4.6.4-redox/libgcc/config.host	2016-12-26 18:33:57.360187220 -0700
+@@ -296,6 +296,10 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu
+ 	extra_parts="$extra_parts crtprec32.o crtprec64.o crtprec80.o crtfastmath.o"
+ 	tmake_file="${tmake_file} i386/t-crtpc i386/t-crtfm"
+ 	;;
++i[34567]86-*-redox*)
++	;;
++x86_64-*-redox*)
++	;;
+ i[34567]86-pc-msdosdjgpp*)
+ 	;;
+ i[34567]86-*-lynxos*)
+diff -rupN gcc-4.6.4/gcc/config.gcc gcc-4.6.4-redox/gcc/config.gcc
+--- gcc-4.6.4/gcc/config.gcc	2016-12-26 19:18:29.234635797 -0700
++++ gcc-4.6.4-redox/gcc/config.gcc	2016-12-26 19:19:23.904316211 -0700
+@@ -1239,6 +1239,11 @@ x86_64-*-netbsd*)
+ 	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
+ 	tmake_file="${tmake_file} i386/t-crtstuff"
+ 	;;
++x86_64-*-redox*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h netbsd.h netbsd-elf.h i386/x86-64.h i386/netbsd64.h"
++	extra_options="${extra_options} netbsd.opt netbsd-elf.opt"
++	tmake_file="${tmake_file} i386/t-crtstuff"
++	;;
+ i[34567]86-*-openbsd2.*|i[34567]86-*openbsd3.[0123])
+ 	tm_file="i386/i386.h i386/unix.h i386/bsd.h i386/gas.h i386/gstabs.h openbsd-oldgas.h openbsd.h i386/openbsd.h"
+ 	extra_options="${extra_options} openbsd.opt"
