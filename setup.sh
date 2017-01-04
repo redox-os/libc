@@ -217,7 +217,6 @@ case $1 in
         gcc_complete
         rust
         cargo
-        rust_host
         ;;
     *)
         echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, cargo, all]"
