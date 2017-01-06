@@ -3,8 +3,10 @@ source environ.sh
 
 BROKEN
 
-SRC=ftp://ftp.freedesktop.org/pub/mesa/11.0.4/mesa-11.0.4.tar.xz
-DIR=mesa-11.0.4
+GIT=https://github.com/redox-os/mesa.git
+GIT_BRANCH=redox
+DIR=mesa
 
-CONFIGURE_ARGS="--host=${HOST} --enable-osmesa --disable-driglx-direct --disable-dri --disable-egl --with-gallium-drivers=swrast"
-autoconf_template $*
+CONFIGURE_ARGS="--host=${HOST} --enable-osmesa --disable-driglx-direct --disable-dri --disable-egl --disable-glx --disable-gbm --disable-omx"
+AUTOGEN_ARGS="${CONFIGURE_ARGS}"
+autogen_template $*
