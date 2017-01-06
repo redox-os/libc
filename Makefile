@@ -18,6 +18,7 @@ tests: \
 	artifacts/bin/c-test \
 	artifacts/bin/ed \
 	artifacts/bin/sdl-test \
+	artifacts/bin/sdl2-test \
 	artifacts/bin/thread-test
 
 artifacts/bin/c-test: tests/c-test.c
@@ -31,6 +32,10 @@ artifacts/bin/ed: tests/ed.c
 artifacts/bin/sdl-test: tests/sdl-test.c
 	mkdir -p artifacts/bin
 	$(TARGET)-gcc -Os -static -o $@ $< -lSDL
+
+artifacts/bin/sdl2-test: tests/sdl2-test.c
+	mkdir -p artifacts/bin
+	$(TARGET)-gcc -Os -static -o $@ $< -lSDL2
 
 artifacts/bin/thread-test: tests/thread-test.c
 	mkdir -p artifacts/bin
