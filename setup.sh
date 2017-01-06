@@ -84,6 +84,7 @@ function newlib {
     popd
 
     mkdir -p "${SYSROOT}/usr"
+    cp -r "${PREFIX}/${TARGET}/lib" "${SYSROOT}/usr"
     cp -r "${PREFIX}/${TARGET}/include" "${SYSROOT}/usr"
 }
 
