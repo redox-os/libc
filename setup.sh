@@ -30,7 +30,7 @@ function binutils {
     rm -rf "binutils"
     mkdir "binutils"
     pushd "binutils"
-        "${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --disable-werror
+        "${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-gdb --disable-nls --disable-werror
         make -j `nproc`
         make -j `nproc` install
     popd
