@@ -2,9 +2,10 @@
 source environ.sh
 
 BROKEN
+DEPENDS libiconv
 
-SRC=ftp://sourceware.org/pub/binutils/snapshots/binutils-2.24.90.tar.bz2
-DIR=binutils-2.24.90
+GIT=https://github.com/redox-os/binutils-gdb.git
+DIR=binutils-gdb
 
-CONFIGURE_ARGS="--host=${HOST}"
+CONFIGURE_ARGS="--host=${HOST} --disable-gdb --disable-nls"
 configure_template $*
