@@ -1,0 +1,24 @@
+diff -rupN mesa/bin/config.sub mesa-redox/bin/config.sub
+--- mesa/bin/config.sub	2017-01-05 20:57:28.094444000 -0700
++++ mesa-redox/bin/config.sub	2017-04-17 20:07:41.683508880 -0600
+@@ -1386,7 +1386,7 @@ case $os in
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -redox* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* | -cloudabi* | -sortix* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+
+diff -rupN mesa/configure mesa-redox/configure
+--- mesa/configure	2016-07-08 16:57:45.000000000 -0600
++++ mesa-redox/configure	2017-04-17 20:13:11.546085886 -0600
+@@ -21401,7 +21401,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+ if test "x$ax_pthread_ok" = xno; then
+-    as_fn_error $? "Building mesa on this platform requires pthreads" "$LINENO" 5
++    echo "Building mesa on this platform requires pthreads" "$LINENO" 5
+ fi
+ test -z "$PTHREAD_LIBS" && PTHREAD_LIBS="-lpthread"
