@@ -7,7 +7,7 @@ GIT=https://github.com/redox-os/gcc.git
 GIT_BRANCH=redox
 DIR=gcc
 
-CONFIGURE_ARGS="--host=${HOST} --target=${HOST} --enable-static --disable-shared --disable-dlopen --disable-nls --enable-languages=c --without-headers"
+CONFIGURE_ARGS="--host=${HOST} --target=${HOST} --prefix=/usr --enable-static --disable-shared --disable-dlopen --disable-nls --enable-languages=c --without-headers"
 BUILD_ARGS="all-gcc all-target-libgcc"
 
 case $1 in
@@ -25,10 +25,10 @@ case $1 in
         popd
         configure_template configure
         make_template build
-        make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` install install-gcc install-target-libgcc
+        make -C "${BUILD}/${DIR}/${MAKE_DIR}" DESTDIR="${BUILD}/sysroot" -j `nproc` install-gcc install-target-libgcc
         ;;
     install)
-        make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` install install-gcc install-target-libgcc
+        make -C "${BUILD}/${DIR}/${MAKE_DIR}" DESTDIR="${BUILD}/sysroot" -j `nproc` install-gcc install-target-libgcc
         ;;
     *)
         configure_template $*
