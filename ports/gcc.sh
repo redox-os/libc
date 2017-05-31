@@ -7,7 +7,7 @@ GIT=https://github.com/redox-os/gcc.git
 GIT_BRANCH=redox
 DIR=gcc
 
-CONFIGURE_ARGS="--host=${HOST} --target=${HOST} --prefix=/usr --enable-static --disable-shared --disable-dlopen --disable-nls --enable-languages=c --without-headers"
+CONFIGURE_ARGS="--host=${HOST} --target=${HOST} --prefix=/usr --enable-static --disable-shared --disable-dlopen --disable-nls --enable-languages=c --without-headers --with-ld=/usr/bin/ld"
 BUILD_ARGS="all-gcc all-target-libgcc"
 
 case $1 in
