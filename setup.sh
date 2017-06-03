@@ -154,7 +154,7 @@ EOF
 
 ######################Cargo###########################
 function cargo {
-    CARGO="${ROOT}/rust/cargo"
+    CARGO="${ROOT}/cargo"
 
     #rm -rf "cargo"
     mkdir -p "cargo"
