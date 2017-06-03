@@ -25,3 +25,4 @@
 [submodule "cargo"]
 	path = cargo
 	url = https://github.com/rust-lang/cargo.git
+	branch = master
