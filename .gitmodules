@@ -10,19 +10,7 @@
 	path = gcc
 	url = https://github.com/redox-os/gcc.git
 	branch = redox
-[submodule "rust"]
-	path = rust
-	url = https://github.com/redox-os/rust.git
-	branch = master
-[submodule "syscall"]
-	path = syscall
-	url = https://github.com/redox-os/syscall.git
-	branch = master
 [submodule "artifacts"]
 	path = artifacts
 	url = https://github.com/redox-os/libc-artifacts.git
-	branch = master
-[submodule "cargo"]
-	path = cargo
-	url = https://github.com/rust-lang/cargo.git
 	branch = master
