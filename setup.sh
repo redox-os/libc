@@ -63,6 +63,18 @@ function gcc_freestanding {
 function newlib {
     NEWLIB="${ROOT}/newlib"
 
+    echo "Defaulting to rust nightly"
+    rustup override set nightly
+    echo "Update rust nightly"
+    rustup update nightly
+    echo "Downloading rust source"
+    rustup component add rust-src
+    if [ -z "$(which xargo)" ]
+    then
+        echo "Installing xargo"
+        cargo install -f xargo
+    fi
+
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..
         autoconf
