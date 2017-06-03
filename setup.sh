@@ -7,6 +7,8 @@ RUST_TARGET="${ARCH}-unknown-redox"
 
 ROOT="${PWD}"
 
+export XARGO_RUST_SRC="${ROOT}/rust/src"
+
 BUILD="${ROOT}/build"
 mkdir -p "${BUILD}"
 cd "${BUILD}"

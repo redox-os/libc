@@ -14,3 +14,7 @@
 	path = artifacts
 	url = https://github.com/redox-os/libc-artifacts.git
 	branch = master
+[submodule "rust"]
+	path = rust
+	url = https://github.com/redox-os/rust.git
+	branch = master
