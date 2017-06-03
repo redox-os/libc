@@ -1,0 +1,33 @@
+_target=x86_64-elf-redox
+pkgname=$_target-binutils-git
+pkgver=r89563.fca55db437
+pkgrel=1
+arch=(i686 x86_64)
+license=(GPL)
+source=(git+https://github.com/redox-os/binutils-gdb)
+md5sums=('SKIP')
+
+build() {
+  cd "$srcdir/binutils-gdb"
+
+  ./configure \
+	  --target=$_target \
+	  --prefix=/usr \
+	  --with-sysroot=/usr/$_target \
+	  --disable-gdb \
+          --disable-nls \
+	  --disable-werror
+
+  make
+}
+
+package() {
+  cd "$srcdir/binutils-gdb"
+  make DESTDIR="$pkgdir" install
+  rm -rf "$pkgdir"/usr/share/info
+}
+
+pkgver() {
+  cd "$srcdir/binutils-gdb"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
