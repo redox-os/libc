@@ -14,3 +14,6 @@ override_dh_auto_configure:
 		--with-build-sysroot=/usr/"$(TARGET)" \
 		--disable-nls \
 		--enable-languages=c,c++
+
+override_dh_auto_build:
+	cd build && make all-gcc all-target-libgcc all-target-libstdc++-v3
