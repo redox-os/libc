@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+TARGET=x86_64-elf-redox
+
+%:
+	mkdir -p build
+	dh $@ --builddirectory=build
+
+override_dh_auto_configure:
+	cd build && ../../../../binutils-gdb/configure \
+	  --target="$(TARGET)" \
+	  --prefix=/usr \
+	  --with-sysroot="/usr/$(TARGET)" \
+	  --disable-gdb \
+    --disable-nls \
+	  --disable-werror

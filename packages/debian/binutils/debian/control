@@ -1,0 +1,11 @@
+Source: x86-64-elf-redox-binutils
+Maintainer: Jeremy Soller <jackpot51@gmail.com>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9)
+
+Package: x86-64-elf-redox-binutils
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: Binutils for Redox cross compilation on x86_64
