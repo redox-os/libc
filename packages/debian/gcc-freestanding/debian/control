@@ -8,4 +8,5 @@ Build-Depends: debhelper (>= 10), autogen, x86-64-elf-redox-binutils
 Package: x86-64-elf-redox-gcc-freestanding
 Architecture: amd64
 Depends: ${misc:Depends}
+Conflicts: x86-64-elf-redox-gcc
 Description: GCC without libc for Redox cross compilation on x86_64
