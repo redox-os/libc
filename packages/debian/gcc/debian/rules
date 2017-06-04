@@ -25,4 +25,4 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir -p build
-	cd build && make DESTDIR="../debian/x86_64-elf-redox-gcc" install-gcc install-target-libgcc install-target-libstdc++-v3
+	cd build && make DESTDIR="$$(realpath ../debian/x86_64-elf-redox-gcc)" install-gcc install-target-libgcc install-target-libstdc++-v3
