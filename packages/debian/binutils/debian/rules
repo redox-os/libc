@@ -5,7 +5,12 @@ TARGET=x86_64-elf-redox
 	mkdir -p build
 	dh $@ --builddirectory=build
 
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf build
+
 override_dh_auto_configure:
+	mkdir -p build
 	cd build && ../../../../binutils-gdb/configure \
 	  --target="$(TARGET)" \
 	  --prefix=/usr \
