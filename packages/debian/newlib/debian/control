@@ -3,7 +3,7 @@ Maintainer: Jeremy Soller <jackpot51@gmail.com>
 Section: misc
 Priority: optional
 Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 9), x86-64-elf-redox-binutils, x86-64-elf-redox-gcc-freestanding
+Build-Depends: debhelper (>= 10), x86-64-elf-redox-binutils, x86-64-elf-redox-gcc-freestanding
 
 Package: x86-64-elf-redox-newlib
 Architecture: amd64
