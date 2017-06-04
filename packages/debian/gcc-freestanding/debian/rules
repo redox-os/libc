@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 TARGET=x86_64-elf-redox
 
+export DEB_BUILD_OPTIONS=nocheck
 export DEB_BUILD_MAINT_OPTIONS=hardening=-format
 
 %:
@@ -10,8 +11,8 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=-format
 override_dh_auto_configure:
 	mkdir -p build
 	cd build && ../../../../gcc/configure \
-	  --target="$(TARGET)" \
-	  --prefix=/usr \
+		--target="$(TARGET)" \
+		--prefix=/usr \
 		--disable-nls \
 		--enable-languages=c,c++ \
 		--without-headers
@@ -19,3 +20,7 @@ override_dh_auto_configure:
 override_dh_auto_build:
 	mkdir -p build
 	cd build && make all-gcc all-target-libgcc
+
+override_dh_auto_install:
+	mkdir -p build
+	cd build && make DESTDIR="../debian/x86_64-elf-redox-gcc-freestanding" install-gcc install-target-libgcc
