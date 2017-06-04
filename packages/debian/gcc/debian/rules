@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 TARGET=x86_64-elf-redox
 
+export DEB_BUILD_MAINT_OPTIONS=hardening=-format
+
 %:
 	mkdir -p build
 	dh $@ --builddirectory=build
