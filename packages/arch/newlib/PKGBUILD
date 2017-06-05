@@ -6,8 +6,7 @@ arch=(i686 x86_64)
 license=(GPL)
 source=("git+https://github.com/redox-os/newlib#branch=redox" "git+https://github.com/redox-os/rust")
 md5sums=('SKIP' 'SKIP')
-makedepends=('xargo' 'rustup' 'automake-1.11')
-depends=($_target-binutils-git $_target-gcc-freestanding-git)
+makedepends=('xargo' 'rustup' 'automake-1.11' $_target-binutils-git $_target-gcc-freestanding-git)
 
 prepare() {
   cd "$srcdir/newlib"
