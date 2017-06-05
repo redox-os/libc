@@ -7,7 +7,7 @@ TARGET=x86_64-elf-redox
 
 override_dh_auto_configure:
 	mkdir -p build
-	cd build && ../source/configure \
+	cd build && ../../../../binutils-gdb/configure \
 		--target="$(TARGET)" \
 		--prefix=/usr \
 		--with-sysroot="/usr/$(TARGET)" \
