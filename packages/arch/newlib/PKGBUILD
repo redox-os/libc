@@ -1,14 +1,17 @@
 _target=x86_64-elf-redox
 pkgname=$_target-newlib-git
-pkgver=r17612.c349c0ab2
+pkgver=r17614.95f70af9f
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
 source=("git+https://github.com/redox-os/newlib#branch=redox" "git+https://github.com/redox-os/rust")
 md5sums=('SKIP' 'SKIP')
-makedepends=('xargo' 'rustup' 'automake-1.11' $_target-binutils-git $_target-gcc-freestanding-git)
+makedepends=('git' 'xargo' 'rustup' 'automake-1.11' $_target-binutils-git $_target-gcc-freestanding-git)
 
 prepare() {
+  cd rust
+  git submodule update --recursive --init
+
   cd "$srcdir/newlib"
 
   rustup override set nightly
@@ -33,7 +36,7 @@ prepare() {
 build() {
   cd "$srcdir/newlib-build"
   $srcdir/newlib/configure --target=$_target --prefix=/usr
-  make all
+  XARGO_RUST_SRC="$srcdir/rust/src" make all
 }
 
 package() {

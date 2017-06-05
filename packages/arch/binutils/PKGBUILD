@@ -5,7 +5,13 @@ pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
 source=(git+https://github.com/redox-os/binutils-gdb)
+makedepends=('git')
 md5sums=('SKIP')
+
+prepare() {
+  cd "$srcdir/binutils-gdb"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
 
 build() {
   cd "$srcdir/binutils-gdb"
