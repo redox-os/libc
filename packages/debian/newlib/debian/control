@@ -1,0 +1,11 @@
+Source: x86-64-elf-redox-newlib
+Maintainer: Jeremy Soller <jackpot51@gmail.com>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 10), x86-64-elf-redox-binutils, x86-64-elf-redox-gcc-freestanding
+
+Package: x86-64-elf-redox-newlib
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: Newlib libc for Redox cross compilation on x86_64

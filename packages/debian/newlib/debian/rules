@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+TARGET=x86_64-elf-redox
+
+%:
+	mkdir -p build
+	dh $@ --builddirectory=build
+
+override_dh_auto_configure:
+	mkdir -p build
+	cd build && ../../../../newlib/configure \
+	  --target="$(TARGET)" \
+	  --prefix=/usr

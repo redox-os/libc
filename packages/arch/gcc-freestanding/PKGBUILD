@@ -1,0 +1,41 @@
+_target=x86_64-elf-redox
+pkgname=$_target-gcc-freestanding-git
+pkgver=r152182.16c75158c66
+pkgrel=1
+arch=(i686 x86_64)
+license=(GPL)
+source=("git+https://github.com/redox-os/gcc#branch=redox")
+md5sums=('SKIP')
+makedepends=('autoconf-2.64')
+depends=($_target-binutils-git libmpc zlib)
+
+prepare() {
+  rm -rf $srcdir/gcc-build
+  mkdir $srcdir/gcc-build
+}
+
+build() {
+  cd "$srcdir/gcc"
+
+  cd libstdc++-v3
+  autoconf2.64
+  cd ..
+
+  cd $srcdir/gcc-build
+  $srcdir/gcc/configure --target=$_target --prefix=/usr --disable-nls --enable-languages=c,c++ --without-headers
+  make all-gcc all-target-libgcc
+}
+
+package() {
+  cd $srcdir/gcc-build
+
+  make DESTDIR="$pkgdir" install-gcc install-target-libgcc
+
+  rm -r "$pkgdir"/usr/share/man/man7
+  rm -r "$pkgdir"/usr/share/info
+}
+
+pkgver() {
+  cd "$srcdir/gcc"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}

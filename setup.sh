@@ -7,6 +7,8 @@ RUST_TARGET="${ARCH}-unknown-redox"
 
 ROOT="${PWD}"
 
+export XARGO_RUST_SRC="${ROOT}/rust/src"
+
 BUILD="${ROOT}/build"
 mkdir -p "${BUILD}"
 cd "${BUILD}"
@@ -63,6 +65,18 @@ function gcc_freestanding {
 function newlib {
     NEWLIB="${ROOT}/newlib"
 
+    echo "Defaulting to rust nightly"
+    rustup override set nightly
+    echo "Update rust nightly"
+    rustup update nightly
+    echo "Downloading rust source"
+    rustup component add rust-src
+    if [ -z "$(which xargo)" ]
+    then
+        echo "Installing xargo"
+        cargo install -f xargo
+    fi
+
     pushd "${NEWLIB}/newlib/libc/sys"
         aclocal-1.11 -I ../..
         autoconf
@@ -105,90 +119,6 @@ function gcc_complete {
     popd
 }
 
-######################RUST############################
-function rust {
-    RUST="${ROOT}/rust"
-
-    #rm -rf "rust"
-    mkdir -p "rust"
-    pushd "rust"
-cat > config.toml <<-EOF
-        [llvm]
-        ccache = true
-
-        [build]
-        target = ["${RUST_TARGET}"]
-        docs = false
-        submodules = false
-
-        [install]
-        prefix = "${PREFIX}"
-
-        [rust]
-        codegen-units = 0
-        codegen-tests = false
-        use-jemalloc = false
-
-        [target.${RUST_TARGET}]
-        cc = "${TARGET}-gcc"
-        cxx = "${TARGET}-g++"
-EOF
-        "${RUST}/x.py" build -j `nproc`
-        "${RUST}/x.py" dist -j `nproc`
-        "${RUST}/x.py" dist --install -j `nproc`
-        build/tmp/dist/rust-std-1.16.0-dev-x86_64-unknown-redox/install.sh --prefix="${PREFIX}"
-    popd
-}
-
-######################Cargo###########################
-function cargo {
-    CARGO="${ROOT}/rust/cargo"
-
-    #rm -rf "cargo"
-    mkdir -p "cargo"
-    pushd "cargo"
-        "${CARGO}/configure" --prefix="${PREFIX}"
-        make -j `nproc`
-        make install -j `nproc`
-    popd
-}
-
-######################RUST############################
-function rust_host {
-    RUST="${ROOT}/rust"
-
-    #rm -rf "rust_host"
-    mkdir -p "rust_host"
-    pushd "rust_host"
-cat > config.toml <<-EOF
-        [llvm]
-        ccache = true
-
-        [build]
-        host = ["${RUST_TARGET}"]
-        target = ["${RUST_TARGET}"]
-        docs = false
-        submodules = false
-
-        [install]
-        prefix = "${SYSROOT}"
-
-        [rust]
-        codegen-units = 0
-        codegen-tests = false
-        use-jemalloc = false
-
-        [target.${RUST_TARGET}]
-        cc = "${TARGET}-gcc"
-        cxx = "${TARGET}-g++"
-EOF
-        "${RUST}/x.py" build -j `nproc`
-        "${RUST}/x.py" dist -j `nproc`
-        "${RUST}/x.py" dist --install -j `nproc`
-        build/tmp/dist/rust-std-1.16.0-dev-x86_64-unknown-redox/install.sh --prefix="${SYSROOT}"
-    popd
-}
-
 case $1 in
     binutils)
         binutils
@@ -202,22 +132,11 @@ case $1 in
     gcc_complete)
         gcc_complete
         ;;
-    rust)
-        rust
-        ;;
-    cargo)
-        cargo
-        ;;
-    rust_host)
-        rust_host
-        ;;
     all)
         binutils
         gcc_freestanding
         newlib
         gcc_complete
-        rust
-        cargo
         ;;
     *)
         echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, cargo, all]"

@@ -1,0 +1,50 @@
+_target=x86_64-elf-redox
+pkgname=$_target-gcc-git
+pkgver=r152182.16c75158c66
+pkgrel=1
+arch=(i686 x86_64)
+license=(GPL)
+source=("git+https://github.com/redox-os/gcc#branch=redox")
+md5sums=('SKIP')
+makedepends=(autoconf-2.64)
+depends=($_target-binutils-git $_target-newlib-git libmpc zlib)
+conflicts=($_target-gcc-freestanding-git)
+provides=($_target-gcc-freestanding-git)
+
+prepare() {
+  cd "$srcdir/gcc"
+
+  cd libstdc++-v3
+  autoconf2.64
+  cd ..
+
+  # Disable fixinc
+  awk '/stmp-fixinc:/ {x=1; print $1 "\n\t" } /^#/ {x=0} !x {print $0}' gcc/Makefile.in > tmp
+  cp tmp gcc/Makefile.in
+  rm tmp
+
+  rm -rf $srcdir/gcc-build
+  mkdir $srcdir/gcc-build
+}
+
+build() {
+  cd "$srcdir/gcc"
+
+  cd $srcdir/gcc-build
+  $srcdir/gcc/configure --target=$_target --prefix=/usr --with-local-prefix=/usr/$_target --with-sysroot=/usr/$_target --with-build-sysroot=/usr/$_target --disable-nls --enable-languages=c,c++
+  make all-gcc all-target-libgcc all-target-libstdc++-v3
+}
+
+package() {
+  cd $srcdir/gcc-build
+
+  make DESTDIR="$pkgdir" install-gcc install-target-libgcc install-target-libstdc++-v3
+
+  rm -r "$pkgdir"/usr/share/man
+  rm -r "$pkgdir"/usr/share/info
+}
+
+pkgver() {
+  cd "$srcdir/gcc"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}

@@ -1,0 +1,28 @@
+#!/usr/bin/make -f
+TARGET=x86_64-elf-redox
+
+export DEB_BUILD_OPTIONS=nocheck
+export DEB_BUILD_MAINT_OPTIONS=hardening=-format
+
+%:
+	mkdir -p build
+	dh $@ --builddirectory=build
+
+override_dh_auto_configure:
+	mkdir -p build
+	cd build && ../../../../gcc/configure \
+		--target="$(TARGET)" \
+		--prefix=/usr \
+		--with-local-prefix="/usr/$(TARGET)" \
+		--with-sysroot=/usr/"$(TARGET)" \
+		--with-build-sysroot=/usr/"$(TARGET)" \
+		--disable-nls \
+		--enable-languages=c,c++
+
+override_dh_auto_build:
+	mkdir -p build
+	cd build && make all-gcc all-target-libgcc all-target-libstdc++-v3
+
+override_dh_auto_install:
+	mkdir -p build
+	cd build && make DESTDIR="$$(realpath ../debian/x86-64-elf-redox-gcc)" install-gcc install-target-libgcc install-target-libstdc++-v3
