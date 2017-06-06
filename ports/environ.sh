@@ -273,7 +273,7 @@ function cmake_template {
             popd
             ;;
         add)
-            #fetch_template add
+            fetch_template add
             cmake_template cmake
             make_template build
             make_template install
