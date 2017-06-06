@@ -3,8 +3,8 @@ source environ.sh
 
 BROKEN
 
-SRC=http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.8.tar.gz
+SRC=http://http.debian.net/debian/pool/main/d/dash/dash_0.5.8.orig.tar.gz
 DIR=dash-0.5.8
 
 CONFIGURE_ARGS="--host=${HOST}"
-configure_template $*
+autoconf_template $*
