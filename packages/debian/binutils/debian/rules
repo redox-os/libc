@@ -8,9 +8,9 @@ TARGET=x86_64-elf-redox
 override_dh_auto_configure:
 	mkdir -p build
 	cd build && ../../../../binutils-gdb/configure \
-	  --target="$(TARGET)" \
-	  --prefix=/usr \
-	  --with-sysroot="/usr/$(TARGET)" \
-	  --disable-gdb \
-    --disable-nls \
-	  --disable-werror
+		--target="$(TARGET)" \
+		--prefix=/usr \
+		--with-sysroot="/usr/$(TARGET)" \
+		--disable-gdb \
+		--disable-nls \
+		--disable-werror

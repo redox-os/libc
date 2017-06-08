@@ -1,12 +1,12 @@
 _target=x86_64-elf-redox
 pkgname=$_target-gcc-git
-pkgver=r152182.16c75158c66
+pkgver=r152183.98e77b0b0d2
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
 source=("git+https://github.com/redox-os/gcc#branch=redox")
 md5sums=('SKIP')
-makedepends=(autoconf-2.64)
+makedepends=('git' 'autoconf-2.64')
 depends=($_target-binutils-git $_target-newlib-git libmpc zlib)
 conflicts=($_target-gcc-freestanding-git)
 provides=($_target-gcc-freestanding-git)
@@ -15,8 +15,10 @@ prepare() {
   cd "$srcdir/gcc"
 
   cd libstdc++-v3
-  autoconf2.64
+  /opt/autoconf/2.64/bin/autoconf
   cd ..
+
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
   # Disable fixinc
   awk '/stmp-fixinc:/ {x=1; print $1 "\n\t" } /^#/ {x=0} !x {print $0}' gcc/Makefile.in > tmp

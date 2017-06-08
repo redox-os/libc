@@ -1,15 +1,17 @@
 _target=x86_64-elf-redox
 pkgname=$_target-gcc-freestanding-git
-pkgver=r152182.16c75158c66
+pkgver=r152183.98e77b0b0d2
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
 source=("git+https://github.com/redox-os/gcc#branch=redox")
 md5sums=('SKIP')
-makedepends=('autoconf-2.64')
+makedepends=('autoconf-2.64' 'git')
 depends=($_target-binutils-git libmpc zlib)
 
 prepare() {
+  cd "$srcdir/gcc"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
   rm -rf $srcdir/gcc-build
   mkdir $srcdir/gcc-build
 }
@@ -18,7 +20,7 @@ build() {
   cd "$srcdir/gcc"
 
   cd libstdc++-v3
-  autoconf2.64
+  /opt/autoconf/2.64/bin/autoconf
   cd ..
 
   cd $srcdir/gcc-build

@@ -8,5 +8,8 @@ TARGET=x86_64-elf-redox
 override_dh_auto_configure:
 	mkdir -p build
 	cd build && ../../../../newlib/configure \
-	  --target="$(TARGET)" \
-	  --prefix=/usr
+		--target="$(TARGET)" \
+		--prefix=/usr
+
+override_dh_auto_build:
+	PATH="$$HOME/.cargo/bin:$$PATH" dh_auto_build
