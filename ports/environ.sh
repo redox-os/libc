@@ -269,7 +269,7 @@ function cmake_template {
         cmake)
             mkdir -p "${BUILD}/${DIR}/${MAKE_DIR}"
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
-                cmake ${BUILD}/${DIR} "${CMAKE_ARGS[@]}"
+                cmake "${CMAKE_ARGS[@]}" ${BUILD}/${DIR}
             popd
             ;;
         add)
