@@ -25,10 +25,12 @@ function rustbuild_template {
             ;;
         install)
             pushd "${BUILD}/${DIR}"
-            mkdir -p "${BUILD}/sysroot/{bin,lib}"
-            cp -fv "build/${RUST_HOST}/stage2/bin/rustc" "${BUILD}/sysroot/bin"
-	    ${HOST}-strip "${BUILD}/sysroot/bin/rustc"
-            cp -fv $(find build/${RUST_HOST}/stage2/lib/rustlib/${RUST_HOST}/lib/ -type f | grep -v librustc) "${BUILD}/sysroot/lib"
+            binpath="${BUILD}/sysroot/bin"
+            libpath="${BUILD}/sysroot/lib/rustlib/${RUST_HOST}/lib"
+            mkdir -p "$binpath" "$libpath"
+            cp -fv "build/${RUST_HOST}/stage2/bin/rustc" "$binpath"
+            ${HOST}-strip "$binpath/rustc"
+            cp -fv $(find build/${RUST_HOST}/stage2/lib/rustlib/${RUST_HOST}/lib/ -type f | grep -v librustc) "$libpath"
             popd
             ;;
         *)
