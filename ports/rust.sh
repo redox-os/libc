@@ -10,8 +10,6 @@ DIR=rust
 
 unset AR AS CC CXX LD NM OBJCOPY OBJDUMP RANLIB READELF STRIP
 
-export REDOX_LLVM_CONFIG="${BUILD}/${DIR}/llvm-config"
-
 function rustbuild_template {
     case $1 in
         build)
