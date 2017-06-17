@@ -1,0 +1,54 @@
+diff -ru libgit2-0.25.1/CMakeLists.txt libgit2-0.25.1-new/CMakeLists.txt
+--- libgit2-0.25.1/CMakeLists.txt	2017-01-09 12:26:45.000000000 -0800
++++ libgit2-0.25.1-new/CMakeLists.txt	2017-06-16 17:09:35.624607611 -0700
+@@ -577,6 +577,7 @@
+ FILE(GLOB SRC_H include/git2.h include/git2/*.h include/git2/sys/*.h)
+ 
+ # On Windows use specific platform sources
++ADD_DEFINITIONS(-DNO_ADDRINFO)
+ IF (WIN32 AND NOT CYGWIN)
+ 	ADD_DEFINITIONS(-DWIN32 -D_WIN32_WINNT=0x0501)
+ 	FILE(GLOB SRC_OS src/win32/*.c src/win32/*.h)
+diff -ru libgit2-0.25.1/src/index.c libgit2-0.25.1-new/src/index.c
+--- libgit2-0.25.1/src/index.c	2017-01-09 12:26:45.000000000 -0800
++++ libgit2-0.25.1-new/src/index.c	2017-06-16 17:06:12.780557883 -0700
+@@ -860,7 +860,7 @@
+ 	entry->mtime.nanoseconds = st->st_mtime_nsec;
+ 	entry->ctime.nanoseconds = st->st_ctime_nsec;
+ #endif
+-	entry->dev  = st->st_rdev;
++	entry->dev  = 0;
+ 	entry->ino  = st->st_ino;
+ 	entry->mode = (!trust_mode && S_ISREG(st->st_mode)) ?
+ 		git_index__create_mode(0666) : git_index__create_mode(st->st_mode);
+diff -ru libgit2-0.25.1/src/posix.c libgit2-0.25.1-new/src/posix.c
+--- libgit2-0.25.1/src/posix.c	2017-01-09 12:26:45.000000000 -0800
++++ libgit2-0.25.1-new/src/posix.c	2017-06-16 18:05:19.710672149 -0700
+@@ -33,11 +33,11 @@
+ 		return -2;
+ 	}
+ 
+-	ainfo->ai_servent = getservbyname(port, 0);
++	ainfo->ai_servent = NULL;
+ 
+-	if (ainfo->ai_servent)
+-		ainfo->ai_port = ainfo->ai_servent->s_port;
+-	else
++//	if (ainfo->ai_servent)
++//		ainfo->ai_port = ainfo->ai_servent->s_port;
++//	else
+ 		ainfo->ai_port = atol(port);
+ 
+ 	memcpy(&ainfo->ai_addr_in.sin_addr,
+diff -ru libgit2-0.25.1/src/unix/map.c libgit2-0.25.1-new/src/unix/map.c
+--- libgit2-0.25.1/src/unix/map.c	2017-01-09 12:26:45.000000000 -0800
++++ libgit2-0.25.1-new/src/unix/map.c	2017-06-16 18:07:35.726322986 -0700
+@@ -6,7 +6,7 @@
+  */
+ #include <git2/common.h>
+ 
+-#if !defined(GIT_WIN32) && !defined(NO_MMAP)
++#if 0
+ 
+ #include "map.h"
+ #include <sys/mman.h>
