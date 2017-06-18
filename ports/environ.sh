@@ -263,3 +263,23 @@ function autogen_template {
             ;;
     esac
 }
+
+function cmake_template {
+    case $1 in
+        cmake)
+            mkdir -p "${BUILD}/${DIR}/${MAKE_DIR}"
+            pushd "${BUILD}/${DIR}/${MAKE_DIR}"
+                cmake "${CMAKE_ARGS[@]}" ${BUILD}/${DIR}
+            popd
+            ;;
+        add)
+            fetch_template add
+            cmake_template cmake
+            make_template build
+            make_template install
+            ;;
+        *)
+            configure_template $*
+            ;;
+    esac
+}
