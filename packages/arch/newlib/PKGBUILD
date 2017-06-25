@@ -1,33 +1,24 @@
 _target=x86_64-elf-redox
 pkgname=$_target-newlib-git
-pkgver=r17614.95f70af9f
+pkgver=r17665.a3025b20e
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
 source=("git+https://github.com/redox-os/newlib#branch=redox" "git+https://github.com/redox-os/rust")
 md5sums=('SKIP' 'SKIP')
-makedepends=('git' 'xargo' 'rustup' 'automake-1.11' $_target-binutils-git $_target-gcc-freestanding-git)
+makedepends=('git' 'rustup' $_target-binutils-git $_target-gcc-freestanding-git)
 
 prepare() {
   cd rust
-  git submodule update --recursive --init
+  git submodule update --init src/compiler-rt src/liblibc
 
   cd "$srcdir/newlib"
 
   rustup override set nightly
   rustup update nightly
 
-  pushd "newlib/libc/sys"
-    aclocal-1.11 -I ../..
-    autoconf
-    automake-1.11 --cygnus Makefile
-  popd
-
-  pushd "newlib/libc/sys/redox"
-    aclocal-1.11 -I ../../..
-    autoconf
-    automake-1.11 --cygnus Makefile
-  popd
+  rm -rf $srcdir/xargo
+  cargo install --root $srcdir/xargo xargo
 
   rm -rf $srcdir/newlib-build
   mkdir $srcdir/newlib-build
@@ -36,7 +27,7 @@ prepare() {
 build() {
   cd "$srcdir/newlib-build"
   $srcdir/newlib/configure --target=$_target --prefix=/usr
-  XARGO_RUST_SRC="$srcdir/rust/src" make all
+  PATH=$srcdir/xargo/bin:$PATH XARGO_RUST_SRC="$srcdir/rust/src" make all
 }
 
 package() {
