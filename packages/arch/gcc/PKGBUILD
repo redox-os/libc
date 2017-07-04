@@ -20,11 +20,6 @@ prepare() {
 
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
-  # Disable fixinc
-  awk '/stmp-fixinc:/ {x=1; print $1 "\n\t" } /^#/ {x=0} !x {print $0}' gcc/Makefile.in > tmp
-  cp tmp gcc/Makefile.in
-  rm tmp
-
   rm -rf $srcdir/gcc-build
   mkdir $srcdir/gcc-build
 }
@@ -33,7 +28,7 @@ build() {
   cd "$srcdir/gcc"
 
   cd $srcdir/gcc-build
-  $srcdir/gcc/configure --target=$_target --prefix=/usr --with-local-prefix=/usr/$_target --with-sysroot=/usr/$_target --with-build-sysroot=/usr/$_target --disable-nls --enable-languages=c,c++
+  $srcdir/gcc/configure --target=$_target --prefix=/usr --with-local-prefix=/usr/$_target --with-sysroot=/usr/$_target --with-native-system-header-dir=/include --disable-nls --enable-languages=c,c++
   make all-gcc all-target-libgcc all-target-libstdc++-v3
 }
 

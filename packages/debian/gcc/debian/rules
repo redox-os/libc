@@ -15,7 +15,7 @@ override_dh_auto_configure:
 		--prefix=/usr \
 		--with-local-prefix="/usr/$(TARGET)" \
 		--with-sysroot="/usr/$(TARGET)" \
-		--with-build-sysroot="/usr/$(TARGET)" \
+		--with-native-system-header-dir=/include \
 		--disable-nls \
 		--enable-languages=c,c++
 
