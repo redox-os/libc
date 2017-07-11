@@ -7,7 +7,9 @@ Newlib, ported to Redox, and a number of shell files for compiling other program
 
 ## Building the toolchain and libc
 
-Run `./libc.sh` to build the gcc toolchain and newlib libc implementation.
+Run `./setup.sh all` to build the gcc toolchain and newlib libc implementation.
+
+Arch Linux and .deb packages can be built from the files in `packages/`. A prebuild .deb toolchain is available at https://static.redox-os.org/toolchain/.
 
 ## Building ports
 
