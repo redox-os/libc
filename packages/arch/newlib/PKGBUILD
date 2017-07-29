@@ -1,6 +1,6 @@
 _target=x86_64-elf-redox
 pkgname=$_target-newlib-git
-pkgver=r17665.a3025b20e
+pkgver=r17719.dabd4bde6
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
@@ -10,7 +10,7 @@ makedepends=('git' 'rustup' $_target-binutils-git $_target-gcc-freestanding-git)
 
 prepare() {
   cd rust
-  git submodule update --init src/compiler-rt src/liblibc
+  git submodule update --init --recursive src/libcompiler_builtins src/liblibc
 
   cd "$srcdir/newlib"
 
