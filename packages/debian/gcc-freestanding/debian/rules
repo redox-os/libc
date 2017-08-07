@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-TARGET=x86_64-elf-redox
+TARGET=x86_64-unknown-redox
 
 export DEB_BUILD_OPTIONS=nocheck
 export DEB_BUILD_MAINT_OPTIONS=hardening=-format
@@ -23,4 +23,4 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir -p build
-	cd build && make DESTDIR="$$(realpath ../debian/x86-64-elf-redox-gcc-freestanding)" install-gcc install-target-libgcc
+	cd build && make DESTDIR="$$(realpath ../debian/x86-64-unknown-redox-gcc-freestanding)" install-gcc install-target-libgcc
