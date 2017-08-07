@@ -9,6 +9,19 @@ ROOT="${PWD}"
 
 export XARGO_RUST_SRC="${ROOT}/rust/src"
 
+if [ `uname` = "Darwin" ]; then
+    NPROC=`sysctl -n hw.ncpu`
+    NO_VERIFY="--no-verify"
+    AUTOCONF="autoconf264"
+    AUTOMAKE="automake112"
+    ACLOCAL="aclocal112"
+else
+    NPROC=`nproc`
+    AUTOCONF="autoconf2.64"
+    AUTOMAKE="automake-1.11"
+    ACLOCAL="aclocal-1.11"
+fi
+
 BUILD="${ROOT}/build"
 mkdir -p "${BUILD}"
 cd "${BUILD}"
@@ -33,8 +46,8 @@ function binutils {
     mkdir "binutils"
     pushd "binutils"
         "${BINUTILS}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-gdb --disable-nls --disable-werror
-        make -j `nproc`
-        make -j `nproc` install
+        make -j $NPROC
+        make -j $NPROC install
     popd
 }
 
@@ -43,21 +56,21 @@ function gcc_freestanding {
     GCC="${ROOT}/gcc"
 
     pushd "${GCC}"
-        ./contrib/download_prerequisites
+        ./contrib/download_prerequisites $NO_VERIFY
     popd
 
     pushd "${GCC}/libstdc++-v3"
-        autoconf2.64
+        $AUTOCONF
     popd
 
     rm -rf "gcc-freestanding"
     mkdir "gcc-freestanding"
     pushd "gcc-freestanding"
         "${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --disable-nls --enable-languages=c,c++ --without-headers
-        make -j `nproc` all-gcc
-        make -j `nproc` all-target-libgcc
-        make -j `nproc` install-gcc
-        make -j `nproc` install-target-libgcc
+        make -j $NPROC all-gcc
+        make -j $NPROC all-target-libgcc
+        make -j $NPROC install-gcc
+        make -j $NPROC install-target-libgcc
     popd
 }
 
@@ -78,23 +91,23 @@ function newlib {
     fi
 
     pushd "${NEWLIB}/newlib/libc/sys"
-        aclocal-1.11 -I ../..
+        $ACLOCAL -I ../..
         autoconf
-        automake-1.11 --cygnus Makefile
+        $AUTOMAKE --cygnus Makefile
     popd
 
     pushd "${NEWLIB}/newlib/libc/sys/redox"
-        aclocal-1.11 -I ../../..
+        $ACLOCAL -I ../../..
         autoconf
-        automake-1.11 --cygnus Makefile
+        $AUTOMAKE --cygnus Makefile
     popd
 
     rm -rf "newlib"
     mkdir "newlib"
     pushd "newlib"
         "${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}"
-        make -j `nproc` all
-        make -j `nproc` install
+        make -j $NPROC all
+        make -j $NPROC install
     popd
 
     mkdir -p "${SYSROOT}/usr"
@@ -110,12 +123,12 @@ function gcc_complete {
     mkdir "gcc"
     pushd "gcc"
         "${GCC}/configure" --target="${TARGET}" --prefix="${PREFIX}" --with-sysroot="${SYSROOT}" --disable-nls --enable-languages=c,c++
-        make -j `nproc` all-gcc
-        make -j `nproc` all-target-libgcc
-        make -j `nproc` install-gcc
-        make -j `nproc` install-target-libgcc
-        make -j `nproc` all-target-libstdc++-v3
-        make -j `nproc` install-target-libstdc++-v3
+        make -j $NPROC all-gcc
+        make -j $NPROC all-target-libgcc
+        make -j $NPROC install-gcc
+        make -j $NPROC install-target-libgcc
+        make -j $NPROC all-target-libstdc++-v3
+        make -j $NPROC install-target-libstdc++-v3
     popd
 }
 
