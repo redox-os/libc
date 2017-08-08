@@ -1,13 +1,13 @@
-Source: x86-64-elf-redox-gcc
+Source: x86-64-unknown-redox-gcc
 Maintainer: Jeremy Soller <jackpot51@gmail.com>
 Section: misc
 Priority: optional
 Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 10), autogen, x86-64-elf-redox-binutils, x86-64-elf-redox-newlib
+Build-Depends: debhelper (>= 10), autogen, x86-64-unknown-redox-binutils, x86-64-unknown-redox-newlib
 
-Package: x86-64-elf-redox-gcc
+Package: x86-64-unknown-redox-gcc
 Architecture: amd64
-Depends: ${misc:Depends}, x86-64-elf-redox-binutils, x86-64-elf-redox-newlib
-Conflicts: x86-64-elf-redox-gcc-freestanding
-Provides: x86-64-elf-redox-gcc-freestanding
+Depends: ${misc:Depends}, x86-64-unknown-redox-binutils, x86-64-unknown-redox-newlib
+Conflicts: x86-64-unknown-redox-gcc-freestanding
+Provides: x86-64-unknown-redox-gcc-freestanding
 Description: GCC for Redox cross compilation on x86_64

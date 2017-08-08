@@ -1,10 +1,10 @@
-x86-64-elf-redox-newlib (0.0.2) zesty; urgency=medium
+x86-64-unknown-redox-newlib (0.0.2) zesty; urgency=medium
 
   * Update to fix init bug
 
  -- Jeremy Soller <jackpot@jackbook>  Sun, 18 Jun 2017 17:29:34 -0600
 
-x86-64-elf-redox-newlib (0.0.1) zesty; urgency=medium
+x86-64-unknown-redox-newlib (0.0.1) zesty; urgency=medium
 
   * Initial release.
 

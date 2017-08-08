@@ -1,4 +1,4 @@
-_target=x86_64-elf-redox
+_target=x86_64-unknown-redox
 pkgname=$_target-newlib-git
 pkgver=r17719.dabd4bde6
 pkgrel=1

@@ -1,12 +1,12 @@
-Source: x86-64-elf-redox-gcc-freestanding
+Source: x86-64-unknown-redox-gcc-freestanding
 Maintainer: Jeremy Soller <jackpot51@gmail.com>
 Section: misc
 Priority: optional
 Standards-Version: 3.9.2
-Build-Depends: debhelper (>= 10), autogen, x86-64-elf-redox-binutils
+Build-Depends: debhelper (>= 10), autogen, x86-64-unknown-redox-binutils
 
-Package: x86-64-elf-redox-gcc-freestanding
+Package: x86-64-unknown-redox-gcc-freestanding
 Architecture: amd64
-Depends: ${misc:Depends}, x86-64-elf-redox-binutils
-Conflicts: x86-64-elf-redox-gcc
+Depends: ${misc:Depends}, x86-64-unknown-redox-binutils
+Conflicts: x86-64-unknown-redox-gcc
 Description: GCC without libc for Redox cross compilation on x86_64

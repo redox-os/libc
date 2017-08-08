@@ -2,8 +2,8 @@
 set -e
 
 ARCH=x86_64
-TARGET="${ARCH}-elf-redox"
-RUST_TARGET="${ARCH}-unknown-redox"
+TARGET="${ARCH}-unknown-redox"
+RUST_TARGET="${TARGET}"
 
 ROOT="${PWD}"
 

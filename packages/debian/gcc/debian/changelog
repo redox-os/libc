@@ -1,4 +1,4 @@
-x86-64-elf-redox-gcc (0.0.1) zesty; urgency=medium
+x86-64-unknown-redox-gcc (0.0.1) zesty; urgency=medium
 
   * Initial release.
 

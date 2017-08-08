@@ -1,4 +1,4 @@
-_target=x86_64-elf-redox
+_target=x86_64-unknown-redox
 pkgname=$_target-gcc-freestanding-git
 pkgver=r152183.98e77b0b0d2
 pkgrel=1
