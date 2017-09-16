@@ -3,11 +3,8 @@ set -e
 
 ARCH=x86_64
 TARGET="${ARCH}-unknown-redox"
-RUST_TARGET="${TARGET}"
 
 ROOT="${PWD}"
-
-export XARGO_RUST_SRC="${ROOT}/rust/src"
 
 if [ `uname` = "Darwin" ]; then
     NPROC=`sysctl -n hw.ncpu`
@@ -152,6 +149,6 @@ case $1 in
         gcc_complete
         ;;
     *)
-        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, rust, cargo, all]"
+        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, all]"
         ;;
 esac
