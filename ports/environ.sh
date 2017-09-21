@@ -4,7 +4,7 @@ set -e
 name="$(basename "$0" .sh)"
 
 ARCH="x86_64"
-HOST="${ARCH}-elf-redox"
+HOST="${ARCH}-unknown-redox"
 RUST_HOST="${ARCH}-unknown-redox"
 BUILD="$(dirname "${PWD}")/build"
 PREFIX="${BUILD}/sysroot/usr"
