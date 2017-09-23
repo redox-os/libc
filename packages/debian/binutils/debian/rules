@@ -14,3 +14,7 @@ override_dh_auto_configure:
 		--disable-gdb \
 		--disable-nls \
 		--disable-werror
+
+override_dh_auto_install:
+	dh_auto_install
+	rm -rf "../debian/x86-64-unknown-redox-binutils/usr/share"
