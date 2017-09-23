@@ -1,0 +1,43 @@
+pkgname=autoconf-2.64
+pkgver=2.64
+pkgrel=1
+epoch=0
+pkgdesc="A GNU tool for automatically configuring source code"
+arch=('any')
+url="https://www.gnu.org/software/autoconf"
+license=('GPL2' 'GPL3')
+groups=()
+depends=('coreutils' 'awk' 'm4' 'diffutils' 'bash')
+makedepends=()
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("http://ftp.gnu.org/gnu/autoconf/autoconf-${pkgver}.tar.gz")
+noextract=()
+md5sums=('30a198cef839471dd4926e92ab485361')
+validpgpkeys=()
+
+prepare() {
+	cd ${pkgname}
+}
+
+build() {
+	cd ${pkgname}
+	./configure --prefix=/opt/autoconf/${pkgver}
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}"
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make DESTDIR=${pkgdir} install
+}
