@@ -9,7 +9,7 @@ diff -rupN lua/src/Makefile lua-redox/src/Makefile
 +PLAT= posix
 
 -CC= gcc -std=gnu99
-+CC= x86_64-elf-redox-gcc -std=gnu99
++CC= x86_64-unknown-redox-gcc -std=gnu99
  CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
  LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
  LIBS= -lm $(SYSLIBS) $(MYLIBS)
