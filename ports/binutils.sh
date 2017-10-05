@@ -6,7 +6,7 @@ UNSTABLE
 GIT=https://github.com/redox-os/binutils-gdb.git
 DIR=binutils-gdb
 
-CONFIGURE_ARGS="--host=${HOST} --target=${HOST} --prefix=/ --with-sysroot=${SYSROOT} --disable-gdb --disable-nls --disable-werror"
+CONFIGURE_ARGS=("--host=${HOST}" "--target=${HOST}" "--prefix=/" "--with-sysroot=${SYSROOT}" "--disable-gdb" "--disable-nls" "--disable-werror")
 
 function binutils_template {
     case $1 in

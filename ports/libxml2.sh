@@ -6,5 +6,5 @@ UNSTABLE
 SRC=ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
 DIR=libxml2-2.9.2
 
-CONFIGURE_ARGS="--host=${HOST} --without-ftp --without-http --without-python"
+CONFIGURE_ARGS=("--host=${HOST}" "--without-ftp" "--without-http" "--without-python")
 configure_template $*

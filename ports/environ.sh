@@ -117,10 +117,10 @@ function fetch_template {
 function make_template {
     case $1 in
         build)
-            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` $BUILD_ARGS
+            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` "${BUILD_ARGS[@]}"
             ;;
         install)
-            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` install $INSTALL_ARGS
+            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` install "${INSTALL_ARGS[@]}"
             ;;
         add)
             fetch_template add
@@ -128,10 +128,10 @@ function make_template {
             make_template install
             ;;
         clean)
-            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` clean $CLEAN_ARGS
+            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` clean "${CLEAN_ARGS[@]}"
             ;;
         uninstall)
-            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` uninstall $UNINSTALL_ARGS
+            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` uninstall "${UNINSTALL_ARGS[@]}"
             ;;
         remove)
             make_template uninstall || true
@@ -200,7 +200,7 @@ function configure_template {
         configure)
             mkdir -p "${BUILD}/${DIR}/${MAKE_DIR}"
             pushd "${BUILD}/${DIR}/${MAKE_DIR}"
-                ${CONFIGURE} --prefix="${PREFIX}" $CONFIGURE_ARGS
+                ${CONFIGURE} --prefix="${PREFIX}" "${CONFIGURE_ARGS[@]}"
             popd
             ;;
         add)
@@ -210,7 +210,7 @@ function configure_template {
             make_template install
             ;;
         distclean)
-            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` distclean $DISTCLEAN_ARGS
+            make -C "${BUILD}/${DIR}/${MAKE_DIR}" -j `nproc` distclean "${DISTCLEAN_ARGS[@]}"
             ;;
         remove)
             make_template uninstall || true
