@@ -1,3 +1,23 @@
+diff -rupN netsurf/libcss/Makefile netsurf-redox/libcss/Makefile
+--- netsurf/libcss/Makefile	2015-03-11 01:34:34.000000000 -0600
++++ netsurf-redox/libcss/Makefile	2017-10-04 21:44:31.093250577 -0600
+@@ -16,11 +16,11 @@ WARNFLAGS := -Wall -W -Wundef -Wpointer-
+ 	-Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes \
+ 	-Wmissing-declarations -Wnested-externs
+ # BeOS/Haiku/AmigaOS4 standard library headers create warnings
+-ifneq ($(HOST),i586-pc-haiku)
+-  ifneq ($(findstring amigaos,$(HOST)),amigaos)
+-    WARNFLAGS := $(WARNFLAGS) -Werror
+-  endif
+-endif
++#ifneq ($(HOST),i586-pc-haiku)
++#  ifneq ($(findstring amigaos,$(HOST)),amigaos)
++#    WARNFLAGS := $(WARNFLAGS) -Werror
++#  endif
++#endif
+ CFLAGS := -D_BSD_SOURCE -I$(CURDIR)/include/ \
+ 	-I$(CURDIR)/src $(WARNFLAGS) $(CFLAGS)
+ ifneq ($(GCCVER),2)
 diff -rupN netsurf/libparserutils/Makefile netsurf-redox/libparserutils/Makefile
 --- netsurf/libparserutils/Makefile	2015-03-11 00:34:44.000000000 -0700
 +++ netsurf-redox/libparserutils/Makefile	2016-07-27 18:09:05.727319532 -0700
@@ -11,6 +31,6 @@ diff -rupN netsurf/libparserutils/Makefile netsurf-redox/libparserutils/Makefile
 +#ifneq ($(BUILD),i586-pc-haiku)
 +#  WARNFLAGS := $(WARNFLAGS) -Werror
 +#endif
- 
+
  CFLAGS := -D_BSD_SOURCE -I$(CURDIR)/include/ \
  	-I$(CURDIR)/src $(WARNFLAGS) $(CFLAGS)
