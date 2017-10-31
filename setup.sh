@@ -4,7 +4,7 @@ set -e
 ARCH=x86_64
 TARGET="${ARCH}-unknown-redox"
 
-ROOT="${PWD}"
+ROOT="${ROOT:-$PWD}"
 
 if [ `uname` = "Darwin" ]; then
     NPROC=`sysctl -n hw.ncpu`
@@ -15,6 +15,10 @@ if [ `uname` = "Darwin" ]; then
 else
     NPROC=`nproc`
     AUTOCONF="autoconf2.64"
+    # Autoconf is often autoconf<version> or autoconf-<version>
+    if ! hash $AUTOCONF &> /dev/null; then
+        AUTOCONF="autoconf-2.64"
+    fi
     AUTOMAKE="automake-1.11"
     ACLOCAL="aclocal-1.11"
 fi
@@ -23,7 +27,7 @@ BUILD="${ROOT}/build"
 mkdir -p "${BUILD}"
 cd "${BUILD}"
 
-PREFIX="${BUILD}/prefix"
+PREFIX=${PREFIX:-"${BUILD}/prefix"}
 mkdir -p "${PREFIX}"
 mkdir -p "${PREFIX}/bin"
 export PATH="${PREFIX}/bin:$PATH"
@@ -128,6 +132,13 @@ function gcc_complete {
         make -j $NPROC install-target-libstdc++-v3
     popd
 }
+
+for cmd in $AUTOCONF $AUTOMAKE $ACLOCAL; do
+    if ! hash $cmd &> /dev/null; then
+        echo "Must install $cmd before x86_64-unknown-redox may be built"
+        exit 1
+    fi
+done
 
 case $1 in
     binutils)
