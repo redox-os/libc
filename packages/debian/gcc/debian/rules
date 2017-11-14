@@ -26,4 +26,4 @@ override_dh_auto_build:
 override_dh_auto_install:
 	mkdir -p build
 	cd build && make DESTDIR="$$(realpath ../debian/x86-64-unknown-redox-gcc)" install-gcc install-target-libgcc install-target-libstdc++-v3
-	rm -rf "../debian/x86-64-unknown-redox-gcc/usr/share"
+	rm -rf "debian/x86-64-unknown-redox-gcc/usr/share/info"
