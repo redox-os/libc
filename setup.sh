@@ -106,7 +106,7 @@ function newlib {
     rm -rf "newlib"
     mkdir "newlib"
     pushd "newlib"
-        "${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}"
+        "${NEWLIB}/configure" --target="${TARGET}" --prefix="${PREFIX}" --enable-newlib-iconv
         make -j $NPROC all
         make -j $NPROC install
     popd
