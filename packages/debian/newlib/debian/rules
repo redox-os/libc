@@ -9,7 +9,8 @@ override_dh_auto_configure:
 	mkdir -p build
 	cd build && ../../../../newlib/configure \
 		--target="$(TARGET)" \
-		--prefix=/usr
+		--prefix=/usr \
+		--enable-newlib-iconv
 
 override_dh_auto_build:
 	PATH="$$HOME/.cargo/bin:$$PATH" dh_auto_build

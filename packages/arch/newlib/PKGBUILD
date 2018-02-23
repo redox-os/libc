@@ -26,7 +26,7 @@ prepare() {
 
 build() {
   cd "$srcdir/newlib-build"
-  $srcdir/newlib/configure --target=$_target --prefix=/usr
+  $srcdir/newlib/configure --target=$_target --prefix=/usr --enable-newlib-iconv
   PATH=$srcdir/xargo/bin:$PATH XARGO_RUST_SRC="$srcdir/rust/src" make all
 }
 
