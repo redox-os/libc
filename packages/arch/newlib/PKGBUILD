@@ -1,21 +1,19 @@
 _target=x86_64-unknown-redox
 pkgname=$_target-newlib-git
-pkgver=r17719.dabd4bde6
+pkgver=r17774.d5ac42a49
 pkgrel=1
 arch=(i686 x86_64)
 license=(GPL)
-source=("git+https://github.com/redox-os/newlib#branch=redox" "git+https://github.com/redox-os/rust")
-md5sums=('SKIP' 'SKIP')
+source=("git+https://github.com/redox-os/newlib#branch=redox")
+md5sums=('SKIP')
 makedepends=('git' 'rustup' $_target-binutils-git $_target-gcc-freestanding-git)
 
 prepare() {
-  cd rust
-  git submodule update --init --recursive src/libcompiler_builtins src/liblibc
-
   cd "$srcdir/newlib"
 
   rustup override set nightly
   rustup update nightly
+  rustup component add rust-src
 
   rm -rf $srcdir/xargo
   cargo install --root $srcdir/xargo xargo
@@ -27,7 +25,7 @@ prepare() {
 build() {
   cd "$srcdir/newlib-build"
   $srcdir/newlib/configure --target=$_target --prefix=/usr --enable-newlib-iconv
-  PATH=$srcdir/xargo/bin:$PATH XARGO_RUST_SRC="$srcdir/rust/src" make all
+  PATH=$srcdir/xargo/bin:$PATH make -j $(nproc) all
 }
 
 package() {
