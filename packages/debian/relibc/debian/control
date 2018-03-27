@@ -1,12 +1,12 @@
-Source: x86-64-unknown-redox-newlib
+Source: x86-64-unknown-redox-relibc
 Maintainer: Jeremy Soller <jackpot51@gmail.com>
 Section: misc
 Priority: optional
 Standards-Version: 3.9.2
 Build-Depends: debhelper (>= 10), x86-64-unknown-redox-binutils, x86-64-unknown-redox-gcc-freestanding
 
-Package: x86-64-unknown-redox-newlib
+Package: x86-64-unknown-redox-relibc
 Architecture: amd64
 Depends: ${misc:Depends}
-Conflicts: x86-64-unknown-redox-relibc
-Description: Newlib libc for Redox cross compilation on x86_64
+Conflicts: x86-64-unknown-redox-newlib
+Description: Relibc libc for Redox cross compilation on x86_64

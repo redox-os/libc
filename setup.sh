@@ -116,6 +116,19 @@ function newlib {
     cp -r "${PREFIX}/${TARGET}/include" "${SYSROOT}/usr"
 }
 
+##################NEWLIB###########################
+function relibc {
+    RELIBC="${ROOT}/relibc"
+
+    rm -rf "relibc"
+    cp -r "${RELIBC}" "relibc"
+    pushd "relibc"
+        make -j $NPROC all
+        make -j $NPROC "DESTDIR=${PREFIX}/${TARGET}" install
+        make -j $NPROC "DESTDIR=${SYSROOT}/usr" install
+    popd
+}
+
 ######################GCC############################
 function gcc_complete {
     GCC="${ROOT}/gcc"
@@ -150,16 +163,19 @@ case $1 in
     newlib)
         newlib
         ;;
+    relibc)
+        relibc
+        ;;
     gcc_complete)
         gcc_complete
         ;;
     all)
         binutils
         gcc_freestanding
-        newlib
+        relibc
         gcc_complete
         ;;
     *)
-        echo "$0 [binutils, gcc_freestanding, newlib, gcc_complete, all]"
+        echo "$0 [binutils, gcc_freestanding, newlib, relibc, gcc_complete, all]"
         ;;
 esac

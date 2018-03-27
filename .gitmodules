@@ -10,3 +10,6 @@
 	path = gcc
 	url = https://github.com/redox-os/gcc.git
 	branch = redox
+[submodule "relibc"]
+	path = relibc
+	url = https://github.com/redox-os/relibc/
