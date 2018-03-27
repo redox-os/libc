@@ -2,11 +2,11 @@
 TARGET=x86_64-unknown-redox
 
 %:
-	if [ ! -d build ]; \
-	then \
-		cp -r ../../../../relibc build; \
-	fi
 	dh $@ --builddirectory=build
+
+override_dh_auto_configure:
+	rm -rf build
+	cp -r ../../../relibc build
 
 override_dh_auto_build:
 	PATH="$$HOME/.cargo/bin:$$PATH" dh_auto_build
