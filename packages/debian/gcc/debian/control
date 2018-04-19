@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 10), autogen, x86-64-unknown-redox-binutils, x86-64
 
 Package: x86-64-unknown-redox-gcc
 Architecture: amd64
-Depends: ${misc:Depends}, x86-64-unknown-redox-binutils, x86-64-unknown-redox-relibc | x86-64-unknown-redox-newlib
+Depends: ${misc:Depends}, x86-64-unknown-redox-binutils, x86-64-unknown-redox-newlib | x86-64-unknown-redox-relibc
 Conflicts: x86-64-unknown-redox-gcc-freestanding
 Provides: x86-64-unknown-redox-gcc-freestanding
 Description: GCC for Redox cross compilation on x86_64
