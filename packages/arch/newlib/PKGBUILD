@@ -24,7 +24,7 @@ prepare() {
 build() {
   cd "$srcdir/newlib-build"
   $srcdir/newlib/configure --target=$_target --prefix=/usr --enable-newlib-iconv
-  PATH=$srcdir/xargo/bin:$PATH make -j $(nproc) all
+  PATH=$srcdir/xargo/bin:$PATH make all
 }
 
 package() {
