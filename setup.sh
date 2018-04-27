@@ -80,7 +80,7 @@ function newlib {
     NEWLIB="${ROOT}/newlib"
 
     echo "Defaulting to rust nightly"
-    rustup override set nightly
+    rustup override set nightly-2018-03-04
     echo "Update rust nightly"
     rustup update nightly
     echo "Downloading rust source"
