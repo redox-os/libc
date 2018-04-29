@@ -80,7 +80,7 @@ function newlib {
     NEWLIB="${ROOT}/newlib"
 
     echo "Defaulting to rust nightly"
-    rustup override set nightly-2018-03-04
+    rustup override set nightly-2018-04-27
     echo "Downloading rust source"
     rustup component add rust-src
     if [ -z "$(which xargo)" ]
