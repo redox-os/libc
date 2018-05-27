@@ -11,7 +11,7 @@ makedepends=('git' 'rustup' $_target-binutils-git $_target-gcc-freestanding-git)
 prepare() {
   cd "$srcdir/newlib"
 
-  rustup override set nightly-2018-03-26
+  rustup override set nightly-2018-04-27
   rustup component add rust-src
 
   rm -rf $srcdir/xargo
