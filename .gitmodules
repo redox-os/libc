@@ -1,15 +1,15 @@
 [submodule "binutils-gdb"]
 	path = binutils-gdb
-	url = https://github.com/redox-os/binutils-gdb.git
+	url = https://gitlab.redox-os.org/redox-os/binutils-gdb.git
 	branch = master
 [submodule "newlib"]
 	path = newlib
-	url = https://github.com/redox-os/newlib.git
+	url = https://gitlab.redox-os.org/redox-os/newlib.git
 	branch = redox
 [submodule "gcc"]
 	path = gcc
-	url = https://github.com/redox-os/gcc.git
+	url = https://gitlab.redox-os.org/redox-os/gcc.git
 	branch = redox
 [submodule "relibc"]
 	path = relibc
-	url = https://github.com/redox-os/relibc/
+	url = https://gitlab.redox-os.org/redox-os/relibc/
