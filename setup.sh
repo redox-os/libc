@@ -2,7 +2,7 @@
 set -e
 
 ARCH=x86_64
-TARGET="${ARCH}-unknown-redox"
+export TARGET="${ARCH}-unknown-redox"
 
 ROOT="${ROOT:-$PWD}"
 
@@ -18,9 +18,18 @@ else
     # Autoconf is often autoconf<version> or autoconf-<version>
     if ! hash $AUTOCONF &> /dev/null; then
         AUTOCONF="autoconf-2.64"
+        if ! hash $AUTOCONF &> /dev/null; then
+            AUTOCONF="autoconf"
+        fi
     fi
     AUTOMAKE="automake-1.11"
+    if ! hash $AUTOMAKE &> /dev/null; then
+        AUTOMAKE="automake"
+    fi
     ACLOCAL="aclocal-1.11"
+    if ! hash $ACLOCAL &> /dev/null; then
+        ACLOCAL="aclocal"
+    fi
 fi
 
 BUILD="${ROOT}/build"
@@ -144,9 +153,18 @@ function gcc_complete {
     popd
 }
 
-for cmd in $AUTOCONF $AUTOMAKE $ACLOCAL; do
-    if ! hash $cmd &> /dev/null; then
-        echo "Must install $cmd before x86_64-unknown-redox may be built"
+for cmd in autoconf,2.64 automake,1.11 aclocal,1.11; do
+    # how to split an unquoted string
+    IFS=","
+    # set assigns any arguments to $1, $2, etc
+    set -- $cmd
+    if ! hash $1 &> /dev/null; then
+        echo "Must install $1 version $2 before x86_64-unknown-redox may be built"
+        exit 1
+    fi
+    if [[ "$(eval $1 --version 2>/dev/null | head -n1 | cut -d' ' -f4)" != "$2"* ]]; then
+        echo "$1 is installed, but version isn't $2."
+        echo "Make sure the correct version is in \$PATH"
         exit 1
     fi
 done
@@ -170,7 +188,8 @@ case $1 in
     all)
         binutils
         gcc_freestanding
-        relibc
+        newlib
+        # TODO: relibc
         gcc_complete
         ;;
     *)
