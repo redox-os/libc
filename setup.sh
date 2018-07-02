@@ -3,6 +3,7 @@ set -e
 
 ARCH=x86_64
 export TARGET="${ARCH}-unknown-redox"
+RUST_VERSION=nightly-2018-06-19
 
 ROOT="${ROOT:-$PWD}"
 
@@ -88,9 +89,9 @@ function gcc_freestanding {
 function newlib {
     NEWLIB="${ROOT}/newlib"
 
-    echo "Defaulting to rust nightly"
-    rustup override set nightly-2018-04-27
-    echo "Downloading rust source"
+    echo "Setting Rust version to ${RUST_VERSION}"
+    rustup override set "${RUST_VERSION}"
+    echo "Downloading Rust source"
     rustup component add rust-src
     if [ -z "$(which xargo)" ]
     then
@@ -126,6 +127,13 @@ function newlib {
 ##################NEWLIB###########################
 function relibc {
     RELIBC="${ROOT}/relibc"
+
+    echo "Setting Rust version to ${RUST_VERSION}"
+    rustup override set "${RUST_VERSION}"
+    echo "Adding Redox OS target"
+    rustup target add "${TARGET}"
+    echo "Downloading Rust source"
+    rustup component add rust-src
 
     rm -rf "relibc"
     cp -r "${RELIBC}" "relibc"
