@@ -153,17 +153,16 @@ function gcc_complete {
     popd
 }
 
-for cmd in autoconf,2.64 automake,1.11 aclocal,1.11; do
-    # how to split an unquoted string
-    IFS=","
-    # set assigns any arguments to $1, $2, etc
-    set -- $cmd
-    if ! hash $1 &> /dev/null; then
-        echo "Must install $1 version $2 before x86_64-unknown-redox may be built"
+for pair in $AUTOCONF,2.64 $AUTOMAKE,1.11 $ACLOCAL,1.11
+do
+    cmd="$(echo "$pair" | cut -d "," -f 1)"
+    ver="$(echo "$pair" | cut -d "," -f 2)"
+    if ! hash $cmd &> /dev/null; then
+        echo "Must install $cmd version $ver before x86_64-unknown-redox may be built"
         exit 1
     fi
-    if [[ "$(eval $1 --version 2>/dev/null | head -n1 | cut -d' ' -f4)" != "$2"* ]]; then
-        echo "$1 is installed, but version isn't $2."
+    if [[ "$(eval $cmd --version 2>/dev/null | head -n1 | cut -d' ' -f4)" != "$ver"* ]]; then
+        echo "$cmd is installed, but version isn't $ver."
         echo "Make sure the correct version is in \$PATH"
         exit 1
     fi
