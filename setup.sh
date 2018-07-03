@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+action="$1"
+
 ARCH=x86_64
 export TARGET="${ARCH}-unknown-redox"
 RUST_VERSION=nightly-2018-06-19
@@ -176,7 +178,7 @@ do
     fi
 done
 
-case $1 in
+case "$action" in
     binutils)
         binutils
         ;;
