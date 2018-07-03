@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-TARGET=x86_64-unknown-redox
+export TARGET=x86_64-unknown-redox
 
 %:
 	dh $@ --builddirectory=build
@@ -12,4 +12,7 @@ override_dh_auto_build:
 	PATH="$$HOME/.cargo/bin:$$PATH" dh_auto_build
 
 override_dh_auto_install:
-	dh_auto_install --destdir=debian/x86-64-unknown-redox-relibc/usr/$(TARGET)
+	PATH="$$HOME/.cargo/bin:$$PATH" dh_auto_install --destdir=debian/x86-64-unknown-redox-relibc/usr/$(TARGET)
+
+override_dh_auto_test:
+	true
