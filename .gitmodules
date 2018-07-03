@@ -12,4 +12,4 @@
 	branch = redox
 [submodule "relibc"]
 	path = relibc
-	url = https://gitlab.redox-os.org/redox-os/relibc/
+	url = https://gitlab.redox-os.org/redox-os/relibc.git
