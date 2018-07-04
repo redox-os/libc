@@ -124,7 +124,7 @@ function newlib {
     cp -r "${PREFIX}/${TARGET}/include" "${SYSROOT}/usr"
 }
 
-##################NEWLIB###########################
+##################RELIBC###########################
 function relibc {
     RELIBC="${ROOT}/relibc"
 
